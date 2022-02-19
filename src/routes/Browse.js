@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Preview from "../components/Preview";
+
 import Header from "../components/Header";
+import RowSlider from "../components/RowSlider";
 
 const Browse = () => {
   const [loading, setLoading] = useState(true);
@@ -15,17 +16,11 @@ const Browse = () => {
   }, []);
   return (
     <>
-      <Header />
-      <h1>Browse!</h1>
+      {/* <Header /> */}
       {loading ? (
         <h2>Loading...</h2>
       ) : (
-        <Preview
-          id={lectures[0]._id}
-          title={lectures[0].title}
-          thumbnailUrl={lectures[0].thumbnailUrl}
-          topics={lectures[0].topics}
-        />
+        <RowSlider lectures={lectures} context="Test Row" />
       )}
     </>
   );
