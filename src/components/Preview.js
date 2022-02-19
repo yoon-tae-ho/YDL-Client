@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "../css/Preview.module.css";
 
-const Preview = ({ id, title, thumbnailUrl, topics }) => {
+const Preview = ({ className, id, title, thumbnailUrl, topics }) => {
   const [hovered, setHovered] = useState(false);
   const [timeoutId, setTimeoutId] = useState("");
   const onMouseMove = () => {
@@ -21,30 +21,34 @@ const Preview = ({ id, title, thumbnailUrl, topics }) => {
     }
   };
   return (
-    <>
+    <div className={className}>
       <Link
+        className={styles.link}
         to={`/browse/${id}`}
         onMouseMove={onMouseMove}
         onMouseLeave={onMouseLeave}
       >
         <img
+          className={styles.thumbnail}
           src={thumbnailUrl}
           alt={process.env.THUMBNAIL_ALT}
           width={160}
           height={90}
         />
-        <div>
-          <h2>{title}</h2>
-          {hovered ? (
-            <ul>
+        <div className={styles.info_container}>
+          <h2 className={styles.title}>{title}</h2>
+          {hovered && (
+            <ul className={styles.topics}>
               {topics.map((topic) => (
-                <li key={topic._id}>{topic.name}</li>
+                <li key={topic._id} className={styles.topic}>
+                  {topic.name}
+                </li>
               ))}
             </ul>
-          ) : null}
+          )}
         </div>
       </Link>
-    </>
+    </div>
   );
 };
 
