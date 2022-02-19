@@ -48,7 +48,6 @@
   font-size: 1vw;
   line-height: 1.4vw;
   transform: translateX(-3.3vw);
-  /* transform: translateY(0.1vw); */
   transition: transform 0.75s;
 }
 
@@ -104,19 +103,45 @@
 .handlePrev,
 .handleNext {
   position: absolute;
-  display: block;
-  background-color: bisque;
+  top: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 3.8vw;
+  height: calc(
+    92vw / 6 * 9 / 16 + 0.8vw + 14px
+  ); /* thumbnail + infoContainer height */
+
+  color: var(--netflix-navigation);
+  background-color: rgba(20, 20, 20, 0.5);
+  font-size: 1.6vw;
   opacity: 0.8;
-  width: 50px;
-  height: 100px;
+  z-index: 20;
+  cursor: pointer;
+
+  transition: all 0.1s ease-in-out;
 }
 
 .handlePrev {
   left: 0;
-  z-index: 20;
+  border-radius: 0 var(--netflix-border-radius) var(--netflix-border-radius) 0;
 }
 
 .handleNext {
   right: 0;
-  z-index: 20;
+  border-radius: var(--netflix-border-radius) 0 0 var(--netflix-border-radius);
+}
+
+.handlePrev:hover,
+.handleNext:hover {
+  background-color: rgba(20, 20, 20, 0.8);
+  color: var(--netflix-white);
+  font-size: 2.2vw;
+}
+
+.handlePrevIcon,
+.handleNextIcon {
+  /* font-size: 1.6vw; */
 }

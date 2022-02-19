@@ -12,17 +12,23 @@ const RowSlider = ({ lectures, context }) => {
   const [pagination, setPagination] = useState(0);
   const [rowHovered, setRowHovered] = useState(false);
   const [linkHovered, setLinkHovered] = useState(false);
+  const [sliderHovered, setSliderHovered] = useState(false);
+  const [btnHovered, setBtnHovered] = useState(false);
   const onPrevClick = () => setPagination((current) => current - 1);
   const onNextClick = () => setPagination((current) => current + 1);
-  const onSliderMove = () => setRowHovered(true);
-  const onSliderLeave = () => setRowHovered(false);
+  const onRowMove = () => setRowHovered(true);
+  const onRowLeave = () => setRowHovered(false);
   const onLinkMove = () => setLinkHovered(true);
   const onLinkLeave = () => setLinkHovered(false);
+  const onSliderMove = () => setSliderHovered(true);
+  const onSliderLeave = () => setSliderHovered(false);
+  const onBtnMove = () => setBtnHovered(true);
+  const onBtnLeave = () => setBtnHovered(false);
   return (
     <div
       className={styles.rowSlider}
-      onMouseMove={onSliderMove}
-      onMouseLeave={onSliderLeave}
+      onMouseMove={onRowMove}
+      onMouseLeave={onRowLeave}
     >
       <h2 className={styles.rowHeader}>
         <Link
@@ -49,10 +55,18 @@ const RowSlider = ({ lectures, context }) => {
         </Link>
       </h2>
       <div className={styles.rowContainer}>
-        <div className={styles.slider}>
+        <div
+          className={styles.slider}
+          onMouseMove={onSliderMove}
+          onMouseLeave={onSliderLeave}
+        >
           {pagination !== 0 && (
             <span className={styles.handlePrev} onClick={onPrevClick}>
-              prev
+              {sliderHovered && (
+                <i
+                  className={`fas fa-chevron-left ${styles.handlePrevIcon}`}
+                ></i>
+              )}
             </span>
           )}
           <ul className={styles.pagination_indicator}></ul>
@@ -81,8 +95,17 @@ const RowSlider = ({ lectures, context }) => {
             </div>
           </div>
           {pagination !== MAXIMUM_PAGE && (
-            <span className={styles.handleNext} onClick={onNextClick}>
-              next
+            <span
+              className={styles.handleNext}
+              onClick={onNextClick}
+              onMouseMove={onBtnMove}
+              onMouseLeave={onBtnLeave}
+            >
+              {sliderHovered && (
+                <i
+                  className={`fas fa-chevron-right ${styles.handleNextIcon}`}
+                ></i>
+              )}
             </span>
           )}
         </div>
