@@ -4,6 +4,33 @@ import { Link } from "react-router-dom";
 import styles from "../css/RowSlider.module.css";
 import Preview from "./Preview";
 
+const getPreviews = (lectures) => {
+  const result = lectures.map((lecture) => {
+    const props = {
+      className: styles.item,
+      id: lecture.id,
+      title: lecture.title,
+      thumbnailUrl: lecture.thumbnailUrl,
+      topics: lecture.topics,
+    };
+    return <Preview {...props} key={lecture.id} />;
+  });
+  return result;
+};
+
+const getPaginationIndicator = (currentPage, MAXIMUM_PAGE) => {
+  const result = [];
+  for (let i = 0; i <= MAXIMUM_PAGE; ++i) {
+    result.push(
+      <li
+        className={i === currentPage ? styles.active : null}
+        key={`PI${i}`}
+      ></li>
+    );
+  }
+  return result;
+};
+
 const RowSlider = ({ lectures, context }) => {
   const CONTENT_IN_PAGE = 6;
   const LAST_PAGE_RATIO = lectures.length / CONTENT_IN_PAGE;
@@ -13,7 +40,6 @@ const RowSlider = ({ lectures, context }) => {
   const [rowHovered, setRowHovered] = useState(false);
   const [linkHovered, setLinkHovered] = useState(false);
   const [sliderHovered, setSliderHovered] = useState(false);
-  const [btnHovered, setBtnHovered] = useState(false);
   const onPrevClick = () => setPagination((current) => current - 1);
   const onNextClick = () => setPagination((current) => current + 1);
   const onRowMove = () => setRowHovered(true);
@@ -22,8 +48,6 @@ const RowSlider = ({ lectures, context }) => {
   const onLinkLeave = () => setLinkHovered(false);
   const onSliderMove = () => setSliderHovered(true);
   const onSliderLeave = () => setSliderHovered(false);
-  const onBtnMove = () => setBtnHovered(true);
-  const onBtnLeave = () => setBtnHovered(false);
   return (
     <div
       className={styles.rowSlider}
@@ -69,7 +93,9 @@ const RowSlider = ({ lectures, context }) => {
               )}
             </span>
           )}
-          <ul className={styles.pagination_indicator}></ul>
+          <ul className={styles.pagination_indicator}>
+            {sliderHovered && getPaginationIndicator(pagination, MAXIMUM_PAGE)}
+          </ul>
           <div className={styles.sliderMask}>
             <div
               className={styles.content}
@@ -82,25 +108,11 @@ const RowSlider = ({ lectures, context }) => {
                 }%)`,
               }}
             >
-              {lectures.map((lecture) => {
-                const props = {
-                  className: styles.item,
-                  id: lecture.id,
-                  title: lecture.title,
-                  thumbnailUrl: lecture.thumbnailUrl,
-                  topics: lecture.topics,
-                };
-                return <Preview {...props} key={lecture.id} />;
-              })}
+              {getPreviews(lectures)}
             </div>
           </div>
           {pagination !== MAXIMUM_PAGE && (
-            <span
-              className={styles.handleNext}
-              onClick={onNextClick}
-              onMouseMove={onBtnMove}
-              onMouseLeave={onBtnLeave}
-            >
+            <span className={styles.handleNext} onClick={onNextClick}>
               {sliderHovered && (
                 <i
                   className={`fas fa-chevron-right ${styles.handleNextIcon}`}

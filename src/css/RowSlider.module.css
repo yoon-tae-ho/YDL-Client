@@ -141,7 +141,21 @@
   font-size: 2.2vw;
 }
 
-.handlePrevIcon,
-.handleNextIcon {
-  /* font-size: 1.6vw; */
+.pagination_indicator {
+  position: absolute;
+  top: 0;
+  right: 4%;
+  margin: -24px 0 12px 0;
+}
+
+.pagination_indicator li {
+  display: inline-block;
+  width: 12px;
+  height: 2px;
+  margin-left: 1px;
+  background-color: #4d4d4d;
+}
+
+.pagination_indicator .active {
+  background-color: #aaa;
 }
