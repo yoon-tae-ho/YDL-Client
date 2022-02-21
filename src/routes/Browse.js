@@ -16,7 +16,7 @@ const Browse = () => {
   }, []);
   return (
     <>
-      {/* <Header /> */}
+      <Header />
       {loading ? (
         <h2>Loading...</h2>
       ) : (

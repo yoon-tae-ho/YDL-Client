@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import styles from "../css/RowSlider.module.css";
 import Preview from "./Preview";
 
-const getPreviews = (lectures) => {
+const getPreviews = (lectures, setPreviewHovered) => {
   const result = lectures.map((lecture) => {
     const props = {
       className: styles.item,
@@ -12,6 +12,7 @@ const getPreviews = (lectures) => {
       title: lecture.title,
       thumbnailUrl: lecture.thumbnailUrl,
       topics: lecture.topics,
+      setPreviewHovered,
     };
     return <Preview {...props} key={lecture.id} />;
   });
@@ -40,6 +41,8 @@ const RowSlider = ({ lectures, context }) => {
   const [rowHovered, setRowHovered] = useState(false);
   const [linkHovered, setLinkHovered] = useState(false);
   const [sliderHovered, setSliderHovered] = useState(false);
+  // setPreviewHovered function triggered by Preview component.
+  const [previewHovered, setPreviewHovered] = useState(false);
   const onPrevClick = () => setPagination((current) => current - 1);
   const onNextClick = () => setPagination((current) => current + 1);
   const onRowMove = () => setRowHovered(true);
@@ -64,14 +67,16 @@ const RowSlider = ({ lectures, context }) => {
           <div className={styles.rowTitle}>{context}</div>
           <div className={styles.arrow}>
             <div
-              className={`${styles.arrowText} ${linkHovered && styles.hovered}`}
+              className={`${styles.arrowText} ${
+                linkHovered && styles.arrowHovered
+              }`}
             >
               모두 보기
             </div>
             {rowHovered && (
               <div
                 className={`fas fa-chevron-right ${styles.arrowIcon} ${
-                  linkHovered && styles.hovered
+                  linkHovered && styles.arrowHovered
                 }`}
               ></div>
             )}
@@ -98,7 +103,9 @@ const RowSlider = ({ lectures, context }) => {
           </ul>
           <div className={styles.sliderMask}>
             <div
-              className={styles.content}
+              className={`content ${styles.content} ${
+                previewHovered ? styles.previewHovered : null
+              }`}
               style={{
                 transform: `translateX(-${
                   100 *
@@ -108,7 +115,7 @@ const RowSlider = ({ lectures, context }) => {
                 }%)`,
               }}
             >
-              {getPreviews(lectures)}
+              {getPreviews(lectures, setPreviewHovered)}
             </div>
           </div>
           {pagination !== MAXIMUM_PAGE && (

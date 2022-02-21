@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "../css/Header.module.css";
 
 const Header = () => {
+  const [scroll, setScroll] = useState(0);
+  useEffect(() => {
+    window.addEventListener("scroll", () => setScroll(window.scrollY));
+    return window.removeEventListener("scroll", () =>
+      setScroll(window.scrollY)
+    );
+  }, []);
   return (
-    <div className={styles.header}>
+    <div
+      className={`${styles.header} ${scroll === 0 ? styles.transparent : null}`}
+    >
       <div className={styles.header_column}>
         <Link to="/browse" className={styles.logo}>
           YDL

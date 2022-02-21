@@ -3,13 +3,15 @@
   display: block;
   width: 100%;
   height: 100%;
+  transition: transform 0.2s ease-in-out;
 }
 
 .thumbnail {
+  position: relative;
   display: block;
   width: 100%;
   height: 100%;
-  border-radius: var(--netflix-border-radius) var(--netflix-border-radius) 0 0;
+  border-radius: var(--netflix-border-radius);
 }
 
 .info_container {
@@ -22,12 +24,46 @@
   font-size: 0.8vw;
 
   color: var(--netflix-white);
-  background-color: var(--netflix-darkgray);
-  border-radius: 0 0 var(--netflix-border-radius) var(--netflix-border-radius);
 }
 
 .title {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.topicList {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.topicItem {
+  padding-right: 0.5vw;
+}
+
+.topicSeparator {
+  padding-right: 0.5vw;
+  font-size: 0.625em;
+  color: var(--netflix-navigation);
+  opacity: 0.5;
+  transform: scale(30%);
+}
+
+.topicText {
+  border-radius: var(--netflix-border-radius) var(--netflix-border-radius) 0 0;
+}
+
+.hoveredLink {
+  transform: scale(150%) translateY(0%);
+  box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+  z-index: 1;
+}
+
+.hoveredImg {
+  border-radius: var(--netflix-border-radius) var(--netflix-border-radius) 0 0;
+}
+
+.hoveredInfo {
+  background-color: var(--netflix-darkgray);
+  border-radius: 0 0 var(--netflix-border-radius) var(--netflix-border-radius);
 }
