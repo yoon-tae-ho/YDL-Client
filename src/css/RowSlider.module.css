@@ -1,3 +1,9 @@
+:root {
+  --slider-height: calc(
+    92vw / 6 * 9 / 16 + 0.8vw + 14px
+  ); /* thumbnail + infoContainer height */
+}
+
 .rowSlider {
   width: 100%;
   margin: 3vw 0;
@@ -71,6 +77,7 @@
 .sliderMask {
   position: relative;
   width: 100%;
+  height: var(--slider-height);
 }
 
 .content {
@@ -110,9 +117,7 @@
   align-items: center;
 
   width: 3.8vw;
-  height: calc(
-    92vw / 6 * 9 / 16 + 0.8vw + 14px
-  ); /* thumbnail + infoContainer height */
+  height: var(--slider-height);
 
   color: var(--netflix-navigation);
   background-color: rgba(20, 20, 20, 0.5);

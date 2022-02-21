@@ -20,7 +20,13 @@ const Browse = () => {
       {loading ? (
         <h2>Loading...</h2>
       ) : (
-        <RowSlider lectures={lectures} context="Test Row" />
+        <div>
+          <RowSlider lectures={lectures} context="Test Row" />
+          <RowSlider lectures={lectures} context="Test Row" />
+          <RowSlider lectures={lectures} context="Test Row" />
+          <RowSlider lectures={lectures} context="Test Row" />
+          <RowSlider lectures={lectures} context="Test Row" />
+        </div>
       )}
     </>
   );
