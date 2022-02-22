@@ -22,19 +22,29 @@
   width: 100%;
   padding: 7px 10px;
   font-size: 0.8vw;
+}
 
-  color: var(--netflix-white);
+.buttonContainer {
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  margin: 9px 0;
 }
 
 .title {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  letter-spacing: 0.5px;
+  color: var(--netflix-white);
 }
 
 .topicList {
   display: flex;
   flex-wrap: wrap;
+  margin-bottom: 9px;
 }
 
 .topicItem {
@@ -50,11 +60,13 @@
 }
 
 .topicText {
-  border-radius: var(--netflix-border-radius) var(--netflix-border-radius) 0 0;
+  font-size: 0.5vw;
+  color: var(--netflix-navigation);
+  opacity: 0.9;
 }
 
 .hoveredLink {
-  transform: scale(150%) translateY(0%);
+  transform: scale(150%) translateY(-50%);
   box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
   z-index: 1;
 }
@@ -66,4 +78,9 @@
 .hoveredInfo {
   background-color: var(--netflix-darkgray);
   border-radius: 0 0 var(--netflix-border-radius) var(--netflix-border-radius);
+}
+
+.hoveredTitle {
+  font-weight: 700;
+  margin-bottom: 9px;
 }

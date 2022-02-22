@@ -1,0 +1,71 @@
+/* Global */
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  /* padding: 0.8rem; */
+  margin-right: 6px;
+
+  width: calc(92vw / 6 / 8);
+  height: calc(92vw / 6 / 8);
+
+  /* min-width: 32px;
+  min-height: 32px;
+  max-width: 42px;
+  max-height: 42px; */
+
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  background-color: rgba(42, 42, 42, 0.6);
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 1em;
+}
+
+.button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--netflix-white);
+}
+
+.button:active {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+/* play */
+
+.play_button {
+  background-color: var(--netflix-white);
+  border-color: var(--netflix-white);
+  color: var(--netflix-black);
+}
+
+.play_button:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* book / like / hate */
+
+.meta_button {
+  font-size: 0.8em;
+}
+
+.active {
+  color: var(--netflix-white);
+}
+
+/* delete */
+
+.delete_button {
+  color: var(--netflix-white);
+}
+
+/* detail */
+
+.detail_button {
+  position: absolute;
+  top: 0;
+  right: -4%;
+  color: var(--netflix-white);
+}

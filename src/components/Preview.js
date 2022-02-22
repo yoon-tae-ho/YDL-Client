@@ -2,6 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "../css/Preview.module.css";
 
+import PlayButton from "./buttons/PlayButton";
+import BookButton from "./buttons/BookButton";
+import LikeButton from "./buttons/LikeButton";
+import HateButton from "./buttons/HateButton";
+import DeleteButton from "./buttons/DeleteButton";
+import DetailButton from "./buttons/DetailButton";
+
 const getTopics = (topics, VISUAL_TOPICS) => {
   const result = [];
   for (let i = 0; i < VISUAL_TOPICS; ++i) {
@@ -69,7 +76,23 @@ const Preview = ({
             hovered ? styles.hoveredInfo : null
           }`}
         >
-          <h2 className={styles.title}>{title}</h2>
+          {hovered && (
+            <div className={styles.buttonContainer}>
+              <PlayButton />
+              <BookButton />
+              <LikeButton />
+              <HateButton />
+              <DeleteButton />
+              <DetailButton />
+            </div>
+          )}
+          <h2
+            className={`${styles.title} ${
+              hovered ? styles.hoveredTitle : null
+            }`}
+          >
+            {title}
+          </h2>
           {hovered && (
             <ul className={styles.topicList}>
               {getTopics(topics, VISUAL_TOPICS)}
