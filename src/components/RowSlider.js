@@ -4,8 +4,22 @@ import { Link } from "react-router-dom";
 import styles from "../css/RowSlider.module.css";
 import Preview from "./Preview";
 
-const getPreviews = (lectures, setPreviewHovered) => {
-  const result = lectures.map((lecture) => {
+const getPreviews = (
+  lectures,
+  setPreviewHovered,
+  pagination,
+  MAXIMUM_PAGE,
+  CONTENT_IN_PAGE
+) => {
+  const result = lectures.map((lecture, index) => {
+    const isFirstItem =
+      pagination < MAXIMUM_PAGE
+        ? index === pagination * CONTENT_IN_PAGE
+        : index === lectures.length - CONTENT_IN_PAGE;
+    const isLastItem =
+      pagination < MAXIMUM_PAGE
+        ? index === (pagination + 1) * CONTENT_IN_PAGE - 1
+        : index === lectures.length - 1;
     const props = {
       className: styles.item,
       id: lecture.id,
@@ -13,6 +27,8 @@ const getPreviews = (lectures, setPreviewHovered) => {
       thumbnailUrl: lecture.thumbnailUrl,
       topics: lecture.topics,
       setPreviewHovered,
+      isFirstItem,
+      isLastItem,
     };
     return <Preview {...props} key={lecture.id} />;
   });
@@ -115,7 +131,13 @@ const RowSlider = ({ lectures, context }) => {
                 }%)`,
               }}
             >
-              {getPreviews(lectures, setPreviewHovered)}
+              {getPreviews(
+                lectures,
+                setPreviewHovered,
+                pagination,
+                MAXIMUM_PAGE,
+                CONTENT_IN_PAGE
+              )}
             </div>
           </div>
           {pagination !== MAXIMUM_PAGE && (

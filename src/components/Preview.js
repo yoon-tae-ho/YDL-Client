@@ -24,6 +24,20 @@ const getTopics = (topics, VISUAL_TOPICS) => {
   return result;
 };
 
+const getLinkClassName = (hovered, isFirstItem, isLastItem) => {
+  let result = `${styles.link}`;
+  if (hovered) {
+    if (isFirstItem) {
+      result += ` ${styles.firstHoveredLink}`;
+    } else if (isLastItem) {
+      result += ` ${styles.lastHoveredLink}`;
+    } else {
+      result += ` ${styles.hoveredLink}`;
+    }
+  }
+  return result;
+};
+
 const Preview = ({
   className,
   id,
@@ -31,6 +45,8 @@ const Preview = ({
   thumbnailUrl,
   topics,
   setPreviewHovered,
+  isFirstItem,
+  isLastItem,
 }) => {
   const VISUAL_TOPICS = 3;
   const [hovered, setHovered] = useState(false);
@@ -57,7 +73,7 @@ const Preview = ({
   return (
     <div className={`${className}`}>
       <Link
-        className={`${styles.link} ${hovered ? styles.hoveredLink : null}`}
+        className={getLinkClassName(hovered, isFirstItem, isLastItem)}
         to={`/browse/${id}`}
         onMouseMove={onMouseMove}
         onMouseLeave={onMouseLeave}

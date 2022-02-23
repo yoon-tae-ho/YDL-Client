@@ -65,10 +65,23 @@
   opacity: 0.9;
 }
 
-.hoveredLink {
-  transform: scale(150%) translateY(-50%);
+.hoveredLink,
+.firstHoveredLink,
+.lastHoveredLink {
   box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
   z-index: 1;
+}
+
+.hoveredLink {
+  transform: scale(150%) translateY(-50%);
+}
+
+.firstHoveredLink {
+  transform: scale(150%) translateY(-50%) translateX(calc(100% / 6));
+}
+
+.lastHoveredLink {
+  transform: scale(150%) translateY(-50%) translateX(calc(-100% / 6));
 }
 
 .hoveredImg {
