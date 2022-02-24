@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 
 import Header from "../components/Header";
 import RowSlider from "../components/RowSlider";
@@ -8,15 +7,13 @@ const Browse = () => {
   const [loading, setLoading] = useState(true);
   const [lectures, setLectures] = useState([]);
   useEffect(() => {
-    axios(`${process.env.REACT_APP_API_URL}/lectures`).then((response) => {
-      if (response.status === 404) {
-        // error process
-        console.log(response);
-        return;
-      }
-      setLectures(response.data);
-      setLoading(false);
-    });
+    fetch(`${process.env.REACT_APP_API_URL}/lectures`)
+      .then((response) => response.json())
+      .then((data) => {
+        setLectures(data);
+        setLoading(false);
+      })
+      .catch((error) => console.log(error));
   }, []);
   return (
     <>

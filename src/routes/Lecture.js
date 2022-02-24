@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import axios from "axios";
 
 const Lecture = () => {
   const { id } = useParams();
   const [lecture, setLecture] = useState(null);
 
   useEffect(() => {
-    axios(`${process.env.REACT_APP_API_URL}/lectures/${id}`).then(
-      (response) => {
-        if (response.status === 404) {
-          // error process
-          return;
-        }
-        setLecture(response.data);
-        console.log(response.data);
-      }
-    );
+    fetch(`${process.env.REACT_APP_API_URL}/lectures/${id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setLecture(data);
+        console.log(data);
+      })
+      .catch((error) => console.log(error));
   }, [id]);
 
   // video Link path
