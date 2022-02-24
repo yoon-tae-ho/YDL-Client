@@ -51,7 +51,8 @@ const Preview = ({
   const VISUAL_TOPICS = 3;
   const [hovered, setHovered] = useState(false);
   const [timeoutId, setTimeoutId] = useState("");
-  const onMouseMove = (event) => {
+
+  const onMouseMove = () => {
     if (!timeoutId) {
       const id = setTimeout(() => {
         setHovered(true);
@@ -66,6 +67,11 @@ const Preview = ({
       setTimeoutId("");
     }
   };
+
+  // clear timeout
+  useEffect(() => {
+    return onMouseLeave;
+  }, []);
 
   // makes belonged content's z-index bigger.
   useEffect(() => setPreviewHovered(hovered), [setPreviewHovered, hovered]);
