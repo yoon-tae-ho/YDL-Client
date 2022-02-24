@@ -9,9 +9,13 @@ const Browse = () => {
   const [lectures, setLectures] = useState([]);
   useEffect(() => {
     axios(`${process.env.REACT_APP_API_URL}/lectures`).then((response) => {
+      if (response.status === 404) {
+        // error process
+        console.log(response);
+        return;
+      }
       setLectures(response.data);
       setLoading(false);
-      console.log(response.data);
     });
   }, []);
   return (

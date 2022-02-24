@@ -9,6 +9,10 @@
   margin: 3vw 0;
 }
 
+.rowSlider:first-child {
+  margin-top: 7vw;
+}
+
 /* .rowHeader {
   line-height: 1.3vw;
 } */

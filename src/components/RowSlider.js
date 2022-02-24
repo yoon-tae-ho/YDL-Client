@@ -22,7 +22,7 @@ const getPreviews = (
         : index === lectures.length - 1;
     const props = {
       className: styles.item,
-      id: lecture.id,
+      id: lecture._id,
       title: lecture.title,
       thumbnailUrl: lecture.thumbnailUrl,
       topics: lecture.topics,
