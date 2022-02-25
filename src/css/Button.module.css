@@ -21,7 +21,7 @@
   border-radius: 50%;
   background-color: rgba(42, 42, 42, 0.6);
   color: rgba(255, 255, 255, 0.3);
-  font-size: 1em;
+  font-size: 0.8vw;
 }
 
 .button:hover {
@@ -45,10 +45,22 @@
   background-color: rgba(255, 255, 255, 0.8);
 }
 
+.play_rectangular {
+  width: calc(92vw / 6 / 8 * 2.8);
+  border-radius: 0.2vw;
+  font-size: 0.9vw;
+  font-weight: 600;
+}
+
+.play_text {
+  margin-left: 8px;
+  font-size: 0.8vw;
+}
+
 /* book / like / hate */
 
 .meta_button {
-  font-size: 0.8em;
+  font-size: calc(0.8vw * 0.8);
 }
 
 .active {

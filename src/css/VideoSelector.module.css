@@ -1,0 +1,104 @@
+:root {
+  --selector-text: #d2d2d2;
+}
+
+.selector_Link:first-of-type {
+  border-top: 1px solid #404040;
+}
+
+.selector_Link {
+  border-bottom: 1px solid #404040;
+}
+
+.selector_item {
+  display: flex;
+  align-items: center;
+  padding: 1em;
+  border-radius: 0.25em;
+}
+
+.current {
+  background-color: #333;
+}
+
+.video_index {
+  display: flex;
+  justify-content: center;
+  flex: 0 0 7%;
+  font-size: 1.5em;
+  color: var(--selector-text);
+}
+
+.video_imgWrapper {
+  position: relative;
+  overflow: hidden;
+  flex: 0 0 18%;
+  border-radius: 4px;
+}
+
+.video_playWrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: -webkit-linear-gradient(
+    255deg,
+    rgba(24, 24, 24, 0.7) 0,
+    rgba(24, 24, 24, 0.5) 10%,
+    transparent 25%
+  );
+  background: linear-gradient(
+    195deg,
+    rgba(24, 24, 24, 0.7) 0,
+    rgba(24, 24, 24, 0.5) 10%,
+    transparent 25%
+  );
+}
+
+.video_playIcon {
+  font-size: 3em;
+  background-color: rgba(30, 30, 20, 0.5);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s ease-in;
+}
+
+.playIcon_hovered {
+  opacity: 0.8;
+}
+
+.video_metadataWrapper {
+  height: 100%;
+  flex: 0 0 70%;
+  font-size: 1em;
+}
+
+.video_header {
+  display: flex;
+  justify-content: space-between;
+  padding: 1em;
+  padding-bottom: 0.5em;
+}
+
+.video_title {
+  color: var(--netflix-white);
+  font-size: 1em;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.video_duration {
+}
+
+.video_synopsis {
+  padding: 0 1em 1em;
+  color: var(--selector-text);
+  font-size: 14px;
+  line-height: 20px;
+}

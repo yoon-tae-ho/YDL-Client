@@ -90,8 +90,6 @@ const Preview = ({
           }`}
           src={thumbnailUrl}
           alt={process.env.THUMBNAIL_ALT}
-          width={160}
-          height={90}
         />
         <div
           className={`${styles.info_container} ${
@@ -104,7 +102,6 @@ const Preview = ({
               <BookButton />
               <LikeButton />
               <HateButton />
-              <DeleteButton />
               <DetailButton />
             </div>
           )}
