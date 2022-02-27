@@ -97,8 +97,20 @@
 }
 
 .video_synopsis {
-  padding: 0 1em 1em;
+  display: flex;
+  justify-content: space-between;
+}
+
+.video_description {
+  margin: 0 1em 1em;
   color: var(--selector-text);
   font-size: 14px;
   line-height: 20px;
+}
+
+.clamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
 }

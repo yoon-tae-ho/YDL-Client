@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-
 import { Link } from "react-router-dom";
+
 import styles from "../css/VideoSelector.module.css";
+import MoreButton from "./buttons/MoreButton";
 
 const VideoSelector = ({ video, index, path }) => {
   const [hovered, setHovered] = useState(false);
+  const [clamped, setClamped] = useState(true);
   const onMouseMove = () => !hovered && setHovered(true);
   const onMouseLeave = () => setHovered(false);
+  const clickHandler = () => setClamped((current) => !current);
 
   return (
     <Link
@@ -37,7 +40,16 @@ const VideoSelector = ({ video, index, path }) => {
             <span className={styles.video_duration}></span>
           </div>
           {video.description && (
-            <p className={styles.video_synopsis}>{video.description}</p>
+            <div className={styles.video_synopsis}>
+              <p
+                className={`${styles.video_description}${
+                  clamped ? ` ${styles.clamped}` : ""
+                }`}
+              >
+                {video.description}
+              </p>
+              <MoreButton clickHandler={clickHandler} />
+            </div>
           )}
         </div>
       </div>

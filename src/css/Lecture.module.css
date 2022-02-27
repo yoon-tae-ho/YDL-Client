@@ -93,16 +93,27 @@
   margin: 0.8em 0;
   font-size: 24px;
   font-weight: 700;
-  box-shadow: var(--apple-box-shadow);
   font-style: italic;
   letter-spacing: 1px;
 }
 
-.lecture_description {
+.lecture_synopsis {
+  display: flex;
+  justify-content: space-between;
   margin: 0.5em 0;
+}
+
+.lecture_description {
   line-height: 27px;
   font-size: 16px;
   color: #d2d2d2;
+}
+
+.clamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 
 .metadata_right {

@@ -8,6 +8,7 @@ import PlayButton from "../components/buttons/PlayButton";
 import BookButton from "../components/buttons/BookButton";
 import LikeButton from "../components/buttons/LikeButton";
 import HateButton from "../components/buttons/HateButton";
+import MoreButton from "../components/buttons/MoreButton";
 import VideoSelector from "../components/VideoSelector";
 
 const getVideoPath = (player, embededCode) => {
@@ -61,6 +62,7 @@ const Lecture = () => {
   const [lecture, setLecture] = useState(null);
   const [error, setError] = useState(null);
   const [expanded, setExpanded] = useState(false);
+  const [clamped, setClamped] = useState(true);
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/lectures/${id}`)
@@ -120,9 +122,18 @@ const Lecture = () => {
             <div className={styles.lecture_metadata}>
               <div className={styles.metadata_left}>
                 <h1 className={styles.lecture_title}>{lecture.title}</h1>
-                <p className={styles.lecture_description}>
-                  {lecture.description}
-                </p>
+                <div className={styles.lecture_synopsis}>
+                  <p
+                    className={`${styles.lecture_description}${
+                      clamped ? ` ${styles.clamped}` : ""
+                    }`}
+                  >
+                    {lecture.description}
+                  </p>
+                  <MoreButton
+                    clickHandler={() => setClamped((current) => !current)}
+                  />
+                </div>
               </div>
               <div className={styles.metadata_right}>
                 <div className={styles.tag}>
@@ -136,7 +147,9 @@ const Lecture = () => {
                 <div className={styles.tag}>
                   <span className={styles.tag_label}>교수:</span>
                   {getTags(lecture.instructors, 3)}
-                  <span className={styles.tag_more}>, 더 보기</span>
+                  {lecture.instructors.length > 3 && (
+                    <span className={styles.tag_more}>, 더 보기</span>
+                  )}
                 </div>
                 <div className={styles.tag}>
                   <span className={styles.tag_label}>토픽:</span>
