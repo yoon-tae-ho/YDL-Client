@@ -1,0 +1,25 @@
+.row {
+  width: 100%;
+  margin: 3vw 0;
+}
+
+.header {
+  width: 100%;
+}
+
+.title {
+  width: 10vw;
+  height: 2vw;
+  margin: 0 4%;
+  margin-bottom: 0.5em;
+  font-size: 1.4vw;
+  background-color: bisque;
+}
+
+.content {
+  width: 100%;
+  height: calc(92vw / 6 * 9 / 16 + 0.8vw + 14px); /* slider height */
+  padding: 0 4%;
+
+  background-color: beige;
+}

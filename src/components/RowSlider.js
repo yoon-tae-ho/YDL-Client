@@ -30,7 +30,7 @@ const getPreviews = (
       isFirstItem,
       isLastItem,
     };
-    return <Preview {...props} key={lecture.id} />;
+    return <Preview {...props} key={lecture._id} />;
   });
   return result;
 };
@@ -67,6 +67,7 @@ const RowSlider = ({ lectures, context }) => {
   const onLinkLeave = () => setLinkHovered(false);
   const onSliderMove = () => setSliderHovered(true);
   const onSliderLeave = () => setSliderHovered(false);
+
   return (
     <div
       className={styles.rowSlider}
@@ -80,7 +81,7 @@ const RowSlider = ({ lectures, context }) => {
           onMouseMove={onLinkMove}
           onMouseLeave={onLinkLeave}
         >
-          <div className={styles.rowTitle}>{context}</div>
+          {context && <div className={styles.rowTitle}>{context}</div>}
           <div className={styles.arrow}>
             <div
               className={`${styles.arrowText} ${
