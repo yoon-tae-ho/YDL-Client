@@ -1,15 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import UserContext from "../contexts/UserContext";
 import styles from "../css/Header.module.css";
 
 const Header = () => {
   const [scroll, setScroll] = useState(0);
+  const { loggedIn } = useContext(UserContext);
+
   useEffect(() => {
     window.addEventListener("scroll", () => setScroll(window.scrollY));
     return window.removeEventListener("scroll", () =>
       setScroll(window.scrollY)
     );
   }, []);
+
   return (
     <div
       className={`${styles.header} ${scroll === 0 ? styles.transparent : null}`}
@@ -35,7 +39,11 @@ const Header = () => {
           <i className="fas fa-bell"></i>
         </div>
         <div className={styles.nav_element}>
-          <i className="fas fa-user"></i>
+          {loggedIn ? (
+            <i className="fas fa-user"></i>
+          ) : (
+            <Link to="/login">로그인</Link>
+          )}
         </div>
       </div>
     </div>

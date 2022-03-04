@@ -4,7 +4,6 @@ import styles from "../css/Browse.module.css";
 import Header from "../components/Header";
 import RowSlider from "../components/RowSlider";
 import RowLoading from "../components/RowLoading";
-import NotFound from "../components/NotFound";
 import { useIntersectionObserver } from "../hooks";
 
 // netflix
@@ -14,7 +13,10 @@ import { useIntersectionObserver } from "../hooks";
 const requestInitial = async () => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/topics/initial`
+      `${process.env.REACT_APP_API_URL}/topics/initial`,
+      {
+        credentials: "include",
+      }
     );
 
     // error process

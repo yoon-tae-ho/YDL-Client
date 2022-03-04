@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,24 +10,54 @@ import Browse from "./routes/Browse";
 import Watch from "./routes/Watch";
 import Lecture from "./routes/Lecture";
 import Topic from "./routes/Topic";
+import Login from "./routes/Login";
+import Join from "./routes/Join";
 
-//https://kyounghwan01.github.io/blog/React/cant-perform-a-React-state-update-on-an-unmounted-component/#%E1%84%87%E1%85%A1%E1%86%AF%E1%84%89%E1%85%A2%E1%86%BC-%E1%84%8B%E1%85%B5%E1%84%8B%E1%85%B2
+import UserContext from "./contexts/UserContext";
+import { checkUser } from "./controllers/userController";
 
 const App = () => {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    checkUser().then((result) => {
+      if (result) {
+        setLoggedIn(result.loggedIn);
+        setUser(result.user);
+      }
+    });
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      loggedIn,
+      setLoggedIn,
+      user,
+      setUser,
+    }),
+    [loggedIn, setLoggedIn, user, setUser]
+  );
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Navigate to="/browse" />} />
-        {/* /browse */}
-        <Route path="/browse">
-          <Route path="" element={<Browse />} />
-          <Route path=":id" element={<Lecture />} />
-          <Route path="topics/:id" element={<Topic />} />
-        </Route>
-        {/* /watch */}
-        <Route path="/watch" element={<Watch />} />
-      </Routes>
-    </Router>
+    <UserContext.Provider value={value}>
+      <Router>
+        <Routes>
+          {/* /browse */}
+          <Route path="/" element={<Navigate to="/browse" />} />
+          <Route path="/browse">
+            <Route path="" element={<Browse />} />
+            <Route path=":id" element={<Lecture />} />
+            <Route path="topics/:id" element={<Topic />} />
+          </Route>
+          {/* /watch */}
+          <Route path="/watch" element={<Watch />} />
+          {/* /user */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/join" element={<Join />} />
+        </Routes>
+      </Router>
+    </UserContext.Provider>
   );
 };
 
