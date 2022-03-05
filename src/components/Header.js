@@ -40,7 +40,8 @@ const Header = () => {
         </div>
         <div className={styles.nav_element}>
           {loggedIn ? (
-            <i className="fas fa-user"></i>
+            // <i className="fas fa-user"></i>
+            <Link to="/logout">로그아웃</Link>
           ) : (
             <Link to="/login">로그인</Link>
           )}

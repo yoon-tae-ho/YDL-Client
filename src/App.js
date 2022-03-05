@@ -11,7 +11,7 @@ import Watch from "./routes/Watch";
 import Lecture from "./routes/Lecture";
 import Topic from "./routes/Topic";
 import Login from "./routes/Login";
-import Join from "./routes/Join";
+import Logout from "./routes/Logout";
 
 import UserContext from "./contexts/UserContext";
 import { checkUser } from "./controllers/userController";
@@ -52,9 +52,9 @@ const App = () => {
           </Route>
           {/* /watch */}
           <Route path="/watch" element={<Watch />} />
-          {/* /user */}
+          {/* user */}
           <Route path="/login" element={<Login />} />
-          <Route path="/join" element={<Join />} />
+          <Route path="/logout" element={<Logout />} />
         </Routes>
       </Router>
     </UserContext.Provider>

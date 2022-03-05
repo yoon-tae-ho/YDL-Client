@@ -16,40 +16,9 @@ export const checkUser = async () => {
   }
 };
 
-export const login = async (userData) => {
-  try {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/user`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
-
-    let user = null;
-    if (response.status === 200) {
-      // login
-      user = await response.json();
-    }
-    return { status: response.status, user };
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const join = async (userData) => {
-  try {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/user/join`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
-
-    const data = await response.json();
-    return { status: response.status, data };
-  } catch (error) {
-    console.log(error);
-  }
+export const logout = async () => {
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/user/logout`, {
+    credentials: "include",
+  });
+  return response.status;
 };
