@@ -21,6 +21,12 @@ const Login = () => {
           Login with Naver
         </a>
       </div>
+      <div>
+        <a href={`${process.env.REACT_APP_API_URL}/user/social/google/start`}>
+          <i className="fab fa-google"></i>
+          Login with Google
+        </a>
+      </div>
     </div>
   );
 };
