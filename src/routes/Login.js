@@ -16,6 +16,11 @@ const Login = () => {
           Login with Kakao
         </a>
       </div>
+      <div>
+        <a href={`${process.env.REACT_APP_API_URL}/user/social/naver/start`}>
+          Login with Naver
+        </a>
+      </div>
     </div>
   );
 };
