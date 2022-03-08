@@ -2,6 +2,11 @@ import React from "react";
 import Header from "../components/Header";
 import styles from "../css/Login.module.css";
 
+import Google from "../images/google_logo.svg";
+import Kakao from "../images/kakao_logo.svg";
+import Naver from "../images/naver_logo.svg";
+import Github from "../images/github_logo.svg";
+
 const Login = () => {
   return (
     <>
@@ -16,13 +21,13 @@ const Login = () => {
               <div className={styles.social_left}>
                 <img
                   className={styles.logo}
-                  src="https://freesvg.org/img/1534129544.png"
+                  src={Google}
                   alt={process.env.REACT_APP_THUMBNAIL_ALT}
                   // 출처: https://freesvg.org/1534129544
                 />
               </div>
               <div className={styles.social_right}>
-                <h4 className={styles.social_text}>Login with Google</h4>
+                <h4 className={styles.social_text}>구글로 로그인</h4>
               </div>
             </a>
           </div>
@@ -34,13 +39,13 @@ const Login = () => {
               <div className={styles.social_left}>
                 <img
                   className={styles.logo}
-                  src="https://www.svgrepo.com/show/368252/kakao.svg"
+                  src={Kakao}
                   alt={process.env.REACT_APP_THUMBNAIL_ALT}
                   // 출처: https://www.svgrepo.com/svg/368252/kakao
                 />
               </div>
               <div className={styles.social_right}>
-                <h4 className={styles.social_text}>Login with Kakao</h4>
+                <h4 className={styles.social_text}>카카오로 로그인</h4>
               </div>
             </a>
           </div>
@@ -51,20 +56,15 @@ const Login = () => {
             >
               <div className={styles.social_left}>
                 <div className={styles.naver_logo_background}></div>
-                <svg
+                <img
                   className={styles.logo}
-                  fill="#1ec800"
-                  role="img"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
+                  src={Naver}
+                  alt={process.env.REACT_APP_THUMBNAIL_ALT}
                   // 출처: https://simpleicons.org/?q=naver
-                >
-                  <title>Naver</title>
-                  <path d="M1.6 0S0 0 0 1.6v20.8S0 24 1.6 24h20.8s1.6 0 1.6-1.6V1.6S24 0 22.4 0zm3.415 5.6h4.78l4.425 6.458V5.6h4.765v12.8h-4.78L9.78 11.943V18.4H5.015Z" />
-                </svg>
+                />
               </div>
               <div className={styles.social_right}>
-                <h4 className={styles.social_text}>Login with Naver</h4>
+                <h4 className={styles.social_text}>네이버로 로그인</h4>
               </div>
             </a>
           </div>
@@ -76,13 +76,13 @@ const Login = () => {
               <div className={styles.social_left}>
                 <img
                   className={styles.logo}
-                  src="https://cdn.pixabay.com/photo/2022/01/30/13/33/github-6980894_1280.png"
+                  src={Github}
                   alt={process.env.REACT_APP_THUMBNAIL_ALT}
-                  // 출처: https://pixabay.com/ko/vectors/github-%ea%b9%83%ed%97%88%eb%b8%8c-%eb%a1%9c%ea%b3%a0-6980894/
+                  // 출처: https://www.svgrepo.com/svg/344880/github
                 />
               </div>
               <div className={styles.social_right}>
-                <h4 className={styles.social_text}>Login with Github</h4>
+                <h4 className={styles.social_text}>깃허브로 로그인</h4>
               </div>
             </a>
           </div>
