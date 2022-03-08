@@ -1,0 +1,131 @@
+.background {
+  min-width: 100vw;
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.socials {
+  background-color: var(--netflix-darkgray);
+  padding: 50px;
+  border-radius: 10px;
+  box-shadow: var(--apple-box-shadow);
+}
+
+.social {
+  width: 343px;
+  height: 50px;
+  background-color: var(--netflix-black);
+  margin-bottom: 20px;
+  border-radius: 3px;
+}
+
+.social:last-child {
+  margin-bottom: 0;
+}
+
+.social_link {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.social_left {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.social_right {
+  width: calc(100% - 50px);
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  width: 100%;
+  height: 100%;
+}
+
+.social_text {
+  transform: translateX(-25px);
+}
+
+/* Github */
+
+.social_github {
+  background-color: #1b1f23;
+}
+
+.social_github .logo {
+  width: 80%;
+  height: 80%;
+}
+
+/* Kakao */
+
+.social_kakao {
+  background-color: #fee500;
+}
+
+.social_kakao .social_right {
+  color: var(--netflix-black);
+}
+
+.social_kakao .logo {
+  width: 60%;
+  height: 60%;
+}
+
+/* Naver */
+
+.social_naver {
+  background-color: #1ec800;
+}
+
+.social_naver .social_left {
+  position: relative;
+}
+
+.naver_logo_background {
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+  background-color: var(--netflix-white);
+  z-index: 2;
+}
+
+.social_naver .logo {
+  position: relative;
+  z-index: 3;
+  width: 80%;
+  height: 80%;
+}
+
+/* Google */
+
+.social_google {
+  background-color: var(--netflix-white);
+}
+
+.social_google .social_right {
+  color: var(--netflix-black);
+}
+
+.social_google .logo {
+  width: 60%;
+  height: 60%;
+}
