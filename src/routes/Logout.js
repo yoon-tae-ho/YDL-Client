@@ -13,6 +13,8 @@ const Logout = () => {
         setLoggedIn(false);
         setUser({});
         navigate("/");
+      } else if (status === 401) {
+        navigate("/login");
       }
     });
   }, []);

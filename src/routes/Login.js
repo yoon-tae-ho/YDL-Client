@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import Header from "../components/Header";
 import styles from "../css/Login.module.css";
 
@@ -6,8 +6,19 @@ import Google from "../images/google_logo.svg";
 import Kakao from "../images/kakao_logo.svg";
 import Naver from "../images/naver_logo.svg";
 import Github from "../images/github_logo.svg";
+import UserContext from "../contexts/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const { loggedIn } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (loggedIn) {
+      navigate("/");
+    }
+  }, [loggedIn]);
+
   return (
     <>
       <Header />
