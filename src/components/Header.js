@@ -5,7 +5,7 @@ import styles from "../css/Header.module.css";
 
 const Header = () => {
   const [scroll, setScroll] = useState(0);
-  const { loggedIn } = useContext(UserContext);
+  const { loggedIn, user } = useContext(UserContext);
 
   useEffect(() => {
     window.addEventListener("scroll", () => setScroll(window.scrollY));
@@ -33,17 +33,29 @@ const Header = () => {
       </div>
       <div className={styles.secondary_navigation}>
         <div className={styles.nav_element}>
-          <i className="fas fa-search"></i>
+          <i className={`fas fa-search ${styles.search_icon}`}></i>
         </div>
-        <div className={styles.nav_element}>
+        {/* <div className={styles.nav_element}>
           <i className="fas fa-bell"></i>
-        </div>
+        </div> */}
         <div className={styles.nav_element}>
-          {loggedIn ? (
-            // <i className="fas fa-user"></i>
-            <Link to="/logout">로그아웃</Link>
-          ) : (
+          {!loggedIn ? (
             <Link to="/login">로그인</Link>
+          ) : (
+            // <Link to="/logout">로그아웃</Link>
+            <div className={styles.user_container}>
+              {!user.avatarUrl ? (
+                <i
+                  className={`fas fa-user-graduate ${styles.user_alt_icon}`}
+                ></i>
+              ) : (
+                <img
+                  className={styles.user_thumbnail}
+                  src={user.avatarUrl}
+                  alt={process.env.REACT_APP_THUMBNAIL_ALT}
+                />
+              )}
+            </div>
           )}
         </div>
       </div>

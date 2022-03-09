@@ -58,13 +58,32 @@
   color: var(--netflix-white);
 }
 
-.nav_element i {
-  font-size: 22px;
+.nav_element {
+  display: flex;
+  align-items: center;
+  height: 100%;
   margin-left: 24px;
+}
+
+.search_icon {
   padding: 1px 6px;
+  font-size: 20px;
   cursor: pointer;
 }
 
-.nav_element:first-child i {
-  font-size: 18px;
+.user_container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  cursor: pointer;
+}
+
+.user_alt_icon {
+  font-size: 22px;
+}
+
+.user_thumbnail {
+  height: 50%;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--netflix-border-radius);
 }
