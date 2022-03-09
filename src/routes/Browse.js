@@ -6,10 +6,6 @@ import RowSlider from "../components/RowSlider";
 import RowLoading from "../components/RowLoading";
 import { useIntersectionObserver } from "../hooks";
 
-// netflix
-// initial number 3.
-// maximum number 38.
-
 const requestInitial = async () => {
   try {
     const response = await fetch(
@@ -90,7 +86,7 @@ const Browse = () => {
   });
 
   useEffect(() => {
-    requestInitial(setTopicArr, setError, setLoading).then((data) => {
+    requestInitial().then((data) => {
       // error process
       if (!data) {
         setError(true);

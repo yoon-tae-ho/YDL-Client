@@ -8,6 +8,7 @@ import LikeButton from "./buttons/LikeButton";
 import HateButton from "./buttons/HateButton";
 import DeleteButton from "./buttons/DeleteButton";
 import DetailButton from "./buttons/DetailButton";
+import { getFirstVideo } from "../controllers/lectureController";
 
 const getTopics = (topics, VISUAL_TOPICS) => {
   const result = [];
@@ -51,6 +52,7 @@ const Preview = ({
   const VISUAL_TOPICS = 3;
   const [hovered, setHovered] = useState(false);
   const [timeoutId, setTimeoutId] = useState("");
+  const [firstVideo, setFirstVideo] = useState({});
 
   const onMouseMove = () => {
     if (!timeoutId) {
@@ -76,6 +78,17 @@ const Preview = ({
   // makes belonged content's z-index bigger.
   useEffect(() => setPreviewHovered(hovered), [setPreviewHovered, hovered]);
 
+  // fetch first video's embededCode and player when hovered
+  useEffect(() => {
+    if (hovered) {
+      getFirstVideo(id).then((video) => {
+        if (video) {
+          setFirstVideo(video);
+        }
+      });
+    }
+  }, [hovered, id]);
+
   return (
     <div className={`${className}`}>
       <Link
@@ -98,7 +111,7 @@ const Preview = ({
         >
           {hovered && (
             <div className={styles.buttonContainer}>
-              <PlayButton />
+              <PlayButton lectureId={id} firstVideo={firstVideo} />
               <BookButton lectureId={id} />
               <LikeButton lectureId={id} />
               <HateButton lectureId={id} />

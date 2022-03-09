@@ -10,18 +10,7 @@ import LikeButton from "../components/buttons/LikeButton";
 import HateButton from "../components/buttons/HateButton";
 import MoreButton from "../components/buttons/MoreButton";
 import VideoSelector from "../components/VideoSelector";
-
-const getVideoPath = (player, embededCode) => {
-  let baseUrl = "/watch";
-  switch (player) {
-    case process.env.REACT_APP_YOUTUBE_PLAYER:
-      baseUrl += `?code=${encodeURIComponent(embededCode)}`;
-      break;
-    default:
-      break;
-  }
-  return baseUrl;
-};
+import { getVideoPath } from "../controllers/lectureController";
 
 const getTags = (tags, limit = tags.length) => {
   let result = [];
@@ -112,7 +101,11 @@ const Lecture = () => {
               <i className="fas fa-arrow-left fa-lg"></i>
             </button>
             <div className={styles.lecture_controls}>
-              <PlayButton shape="rectangular" />
+              <PlayButton
+                shape="rectangular"
+                lectureId={id}
+                firstVideo={lecture.videos[0]}
+              />
               <BookButton lectureId={id} />
               <LikeButton lectureId={id} />
               <HateButton lectureId={id} />
