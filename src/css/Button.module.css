@@ -33,6 +33,11 @@
   background-color: rgba(255, 255, 255, 0.7);
 }
 
+.active {
+  color: var(--netflix-white);
+  border-color: var(--netflix-white);
+}
+
 /* play */
 
 .play_button {

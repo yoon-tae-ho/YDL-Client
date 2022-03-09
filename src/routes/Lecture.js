@@ -113,9 +113,9 @@ const Lecture = () => {
             </button>
             <div className={styles.lecture_controls}>
               <PlayButton shape="rectangular" />
-              <BookButton />
-              <LikeButton />
-              <HateButton />
+              <BookButton lectureId={id} />
+              <LikeButton lectureId={id} />
+              <HateButton lectureId={id} />
             </div>
           </div>
           <div className={styles.lecture_info}>

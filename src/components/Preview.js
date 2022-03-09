@@ -99,9 +99,9 @@ const Preview = ({
           {hovered && (
             <div className={styles.buttonContainer}>
               <PlayButton />
-              <BookButton />
-              <LikeButton />
-              <HateButton />
+              <BookButton lectureId={id} />
+              <LikeButton lectureId={id} />
+              <HateButton lectureId={id} />
               <DetailButton />
             </div>
           )}
