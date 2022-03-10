@@ -13,6 +13,7 @@ const Logout = () => {
         setLoggedIn(false);
         setUser({});
         navigate("/");
+        window.location.reload();
       } else if (status === 401) {
         navigate("/login");
       }
