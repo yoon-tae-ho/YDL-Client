@@ -1,47 +1,60 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import UserContext from "../../contexts/UserContext";
 import { cancelHate, checkArray, hate } from "../../controllers/userController";
 import styles from "../../css/Button.module.css";
 
 const HateButton = ({ lectureId }) => {
-  const { user, setUser } = useContext(UserContext);
+  const {
+    loggedIn,
+    setUser,
+    user: { hated, liked },
+  } = useContext(UserContext);
   const [active, setActive] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const navigate = useNavigate();
 
   const onClick = (event) => {
     event.preventDefault();
+
+    if (!loggedIn) {
+      return navigate("/login");
+    }
+
     if (active) {
       cancelHate(lectureId);
-      setUser({
-        ...user,
-        hated: user.hated.filter(
+      setUser((current) => ({
+        ...current,
+        hated: current.hated.filter(
           (aHated) => String(aHated) !== String(lectureId)
         ),
-      });
+      }));
     } else {
       hate(lectureId);
-      setUser({
-        ...user,
-        hated: [lectureId, ...user.hated],
+      setUser((current) => ({
+        ...current,
+        hated: [lectureId, ...current.hated],
         liked: !isLiked
-          ? user.liked
-          : user.liked.filter((aLike) => String(aLike) !== String(lectureId)),
-      });
+          ? current.liked
+          : current.liked.filter(
+              (aLike) => String(aLike) !== String(lectureId)
+            ),
+      }));
     }
     setActive((current) => !current);
   };
 
   useEffect(() => {
-    if (checkArray(user.hated, lectureId)) {
+    if (loggedIn && checkArray(hated, lectureId)) {
       setActive(true);
     } else {
       setActive(false);
     }
 
-    if (checkArray(user.liked, lectureId)) {
+    if (loggedIn && checkArray(liked, lectureId)) {
       setIsLiked(true);
     }
-  }, [user, lectureId]);
+  }, [loggedIn, liked, hated, lectureId]);
 
   return (
     <div>

@@ -1,47 +1,60 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import UserContext from "../../contexts/UserContext";
 import { cancelLike, checkArray, like } from "../../controllers/userController";
 import styles from "../../css/Button.module.css";
 
 const LikeButton = ({ lectureId }) => {
-  const { user, setUser } = useContext(UserContext);
+  const {
+    loggedIn,
+    setUser,
+    user: { liked, hated },
+  } = useContext(UserContext);
   const [active, setActive] = useState(false);
   const [isHated, setIsHated] = useState(false);
+  const navigate = useNavigate();
 
   const onClick = (event) => {
     event.preventDefault();
+
+    if (!loggedIn) {
+      return navigate("/login");
+    }
+
     if (active) {
       cancelLike(lectureId);
-      setUser({
-        ...user,
-        liked: user.liked.filter(
+      setUser((current) => ({
+        ...current,
+        liked: current.liked.filter(
           (aLike) => String(aLike) !== String(lectureId)
         ),
-      });
+      }));
     } else {
       like(lectureId);
-      setUser({
-        ...user,
-        liked: [lectureId, ...user.liked],
+      setUser((current) => ({
+        ...current,
+        liked: [lectureId, ...current.liked],
         hated: !isHated
-          ? user.hated
-          : user.hated.filter((aHate) => String(aHate) !== String(lectureId)),
-      });
+          ? current.hated
+          : current.hated.filter(
+              (aHate) => String(aHate) !== String(lectureId)
+            ),
+      }));
     }
     setActive((current) => !current);
   };
 
   useEffect(() => {
-    if (checkArray(user.liked, lectureId)) {
+    if (loggedIn && checkArray(liked, lectureId)) {
       setActive(true);
     } else {
       setActive(false);
     }
 
-    if (checkArray(user.hated, lectureId)) {
+    if (loggedIn && checkArray(hated, lectureId)) {
       setIsHated(true);
     }
-  }, [user, lectureId]);
+  }, [loggedIn, liked, hated, lectureId]);
 
   return (
     <div>

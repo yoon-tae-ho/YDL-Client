@@ -17,6 +17,7 @@ const checkViewed = (viewList, targetId) => {
 
 const PlayButton = ({ shape, lectureId, firstVideo }) => {
   const {
+    loggedIn,
     user: { viewed },
   } = useContext(UserContext);
   const [playIndex, setPlayIndex] = useState(-1);
@@ -42,13 +43,17 @@ const PlayButton = ({ shape, lectureId, firstVideo }) => {
     }
   };
 
+  // check viewded
   useEffect(() => {
-    const index = checkViewed(viewed, lectureId);
-    if (index !== -1) {
-      setPlayIndex(index);
+    if (loggedIn) {
+      const index = checkViewed(viewed, lectureId);
+      if (index !== -1) {
+        setPlayIndex(index);
+      }
     }
   }, [viewed, lectureId]);
 
+  // check shape
   useEffect(() => {
     setIsRec(shape === "rectangular");
   }, [shape]);
