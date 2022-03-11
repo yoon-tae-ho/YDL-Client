@@ -48,7 +48,7 @@ const getPaginationIndicator = (currentPage, MAXIMUM_PAGE) => {
   return result;
 };
 
-const RowSlider = ({ lectures, context }) => {
+const RowSlider = ({ lectures, context, topicId }) => {
   const CONTENT_IN_PAGE = 6;
   const LAST_PAGE_RATIO = lectures.length / CONTENT_IN_PAGE;
   const MAXIMUM_PAGE = Math.ceil(LAST_PAGE_RATIO) - 1;
@@ -75,30 +75,32 @@ const RowSlider = ({ lectures, context }) => {
       onMouseLeave={onRowLeave}
     >
       <h2 className={styles.rowHeader}>
-        <Link
-          to=""
-          className={styles.rowLink}
-          onMouseMove={onLinkMove}
-          onMouseLeave={onLinkLeave}
-        >
-          {context && <div className={styles.rowTitle}>{context}</div>}
-          <div className={styles.arrow}>
-            <div
-              className={`${styles.arrowText} ${
-                linkHovered && styles.arrowHovered
-              }`}
-            >
-              모두 보기
-            </div>
-            {rowHovered && (
+        {topicId && (
+          <Link
+            to={`/browse/topics/${topicId}`}
+            className={styles.rowLink}
+            onMouseMove={onLinkMove}
+            onMouseLeave={onLinkLeave}
+          >
+            {context && <div className={styles.rowTitle}>{context}</div>}
+            <div className={styles.arrow}>
               <div
-                className={`fas fa-chevron-right ${styles.arrowIcon} ${
+                className={`${styles.arrowText} ${
                   linkHovered && styles.arrowHovered
                 }`}
-              ></div>
-            )}
-          </div>
-        </Link>
+              >
+                모두 보기
+              </div>
+              {rowHovered && (
+                <div
+                  className={`fas fa-chevron-right ${styles.arrowIcon} ${
+                    linkHovered && styles.arrowHovered
+                  }`}
+                ></div>
+              )}
+            </div>
+          </Link>
+        )}
       </h2>
       <div className={styles.rowContainer}>
         <div
@@ -115,9 +117,12 @@ const RowSlider = ({ lectures, context }) => {
               )}
             </span>
           )}
-          <ul className={styles.pagination_indicator}>
-            {sliderHovered && getPaginationIndicator(pagination, MAXIMUM_PAGE)}
-          </ul>
+          {pagination > 1 && (
+            <ul className={styles.pagination_indicator}>
+              {sliderHovered &&
+                getPaginationIndicator(pagination, MAXIMUM_PAGE)}
+            </ul>
+          )}
           <div className={styles.sliderMask}>
             <div
               className={`content ${styles.content} ${

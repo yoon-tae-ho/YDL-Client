@@ -24,6 +24,10 @@ export const logout = async () => {
 };
 
 export const checkArray = (array, targetId) => {
+  if (!array) {
+    return;
+  }
+
   let result = false;
   for (let i = 0; i < array.length; ++i) {
     if (String(array[i]) === String(targetId)) {

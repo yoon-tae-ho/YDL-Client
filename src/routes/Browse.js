@@ -57,7 +57,7 @@ const Browse = () => {
   const [ended, setEnded] = useState(false);
   const [topicArr, setTopicArr] = useState([]);
   const [error, setError] = useState(false);
-  const targetRef = useRef();
+  const [target, setTarget] = useState(null);
 
   const onIntersect = async () => {
     if (topicArr.length > 0 && !loading && !ended) {
@@ -81,7 +81,7 @@ const Browse = () => {
 
   useIntersectionObserver({
     root: null,
-    target: targetRef.current,
+    target: target,
     onIntersect,
   });
 
@@ -106,9 +106,13 @@ const Browse = () => {
             topicArr.map((topic, index) => (
               <div
                 key={topic._id}
-                ref={index === 5 * more + 4 ? targetRef : null}
+                ref={index === 5 * more + 4 ? setTarget : null}
               >
-                <RowSlider lectures={topic.lectures} context={topic.name} />
+                <RowSlider
+                  lectures={topic.lectures}
+                  context={topic.name}
+                  topicId={topic._id}
+                />
               </div>
             ))}
         </div>

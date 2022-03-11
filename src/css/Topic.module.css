@@ -1,0 +1,13 @@
+.header {
+  margin-top: 7vw;
+  margin-bottom: 6vw;
+  padding: 0 4%;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 500;
+  line-height: 36px;
+  letter-spacing: 1px;
+  font-style: italic;
+}

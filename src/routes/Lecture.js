@@ -53,6 +53,14 @@ const Lecture = () => {
   const [expanded, setExpanded] = useState(false);
   const [clamped, setClamped] = useState(true);
 
+  // id regex validation
+  useEffect(() => {
+    const regex = new RegExp(process.env.REACT_APP_MONGO_REGEX_FORMAT);
+    if (!regex.test(id)) {
+      setError(true);
+    }
+  }, [id]);
+
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/lectures/${id}`)
       .then((response) => {

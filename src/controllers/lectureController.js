@@ -25,3 +25,24 @@ export const getFirstVideo = async (lectureId) => {
     console.log(error);
   }
 };
+
+export const getLecturesOfTopic = async (topicId, fetchIndex) => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/topics/${topicId}`,
+      {
+        headers: {
+          fetch_index: fetchIndex,
+        },
+      }
+    );
+
+    if (response.status === 404) {
+      return;
+    }
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+  }
+};
