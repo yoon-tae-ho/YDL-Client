@@ -10,9 +10,11 @@ import DeleteButton from "./buttons/DeleteButton";
 import DetailButton from "./buttons/DetailButton";
 import { getFirstVideo } from "../controllers/lectureController";
 
-const getTopics = (topics, VISUAL_TOPICS) => {
+const getTopics = (topics, VISIBLE_TOPICS) => {
   const result = [];
-  for (let i = 0; i < VISUAL_TOPICS; ++i) {
+  const indicator =
+    VISIBLE_TOPICS < topics.length ? VISIBLE_TOPICS : topics.length;
+  for (let i = 0; i < indicator; ++i) {
     result.push(
       <li key={topics[i]._id} className={styles.topicItem}>
         {i !== 0 && (
@@ -49,7 +51,7 @@ const Preview = ({
   isFirstItem,
   isLastItem,
 }) => {
-  const VISUAL_TOPICS = 3;
+  const VISIBLE_TOPICS = 3;
   const [hovered, setHovered] = useState(false);
   const [timeoutId, setTimeoutId] = useState("");
   const [firstVideo, setFirstVideo] = useState({});
@@ -127,7 +129,7 @@ const Preview = ({
           </h2>
           {hovered && (
             <ul className={styles.topicList}>
-              {getTopics(topics, VISUAL_TOPICS)}
+              {getTopics(topics, VISIBLE_TOPICS)}
             </ul>
           )}
         </div>

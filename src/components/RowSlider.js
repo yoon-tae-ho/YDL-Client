@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import styles from "../css/RowSlider.module.css";
@@ -117,7 +117,7 @@ const RowSlider = ({ lectures, context, topicId }) => {
               )}
             </span>
           )}
-          {pagination > 1 && (
+          {lectures.length > 6 && (
             <ul className={styles.pagination_indicator}>
               {sliderHovered &&
                 getPaginationIndicator(pagination, MAXIMUM_PAGE)}

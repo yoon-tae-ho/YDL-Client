@@ -1,0 +1,9 @@
+.main {
+  margin-top: 68px;
+  height: calc(100vh - 68px);
+}
+
+.videoFrame {
+  width: 100%;
+  height: 100%;
+}

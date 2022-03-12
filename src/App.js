@@ -10,6 +10,7 @@ import Browse from "./routes/Browse";
 import Watch from "./routes/Watch";
 import Lecture from "./routes/Lecture";
 import Topic from "./routes/Topic";
+import Instructor from "./routes/Instructor";
 import Login from "./routes/Login";
 import Logout from "./routes/Logout";
 
@@ -49,6 +50,7 @@ const App = () => {
             <Route path="" element={<Browse />} />
             <Route path=":id" element={<Lecture />} />
             <Route path="topics/:id" element={<Topic />} />
+            <Route path="instructors/:id" element={<Instructor />} />
           </Route>
           {/* /watch */}
           <Route path="/watch" element={<Watch />} />

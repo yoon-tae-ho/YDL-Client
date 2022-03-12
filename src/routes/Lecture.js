@@ -12,12 +12,13 @@ import MoreButton from "../components/buttons/MoreButton";
 import VideoSelector from "../components/VideoSelector";
 import { getVideoPath } from "../controllers/lectureController";
 
-const getTags = (tags, limit = tags.length) => {
+const getTags = (type, tags, limit = tags.length) => {
   let result = [];
-  for (let i = 0; i < limit; ++i) {
+  const indicator = limit < tags.length ? limit : tags.length;
+  for (let i = 0; i < indicator; ++i) {
     result.push(
       <span className={styles.tag_item} key={tags[i]._id}>
-        <Link to={`/browse/instructors/${tags[i]._id}`}>{` ${tags[i].name}${
+        <Link to={`/browse/${type}s/${tags[i]._id}`}>{` ${tags[i].name}${
           i === limit - 1 ? "" : ","
         }`}</Link>
       </span>
@@ -147,14 +148,14 @@ const Lecture = () => {
                 </div>
                 <div className={styles.tag}>
                   <span className={styles.tag_label}>교수:</span>
-                  {getTags(lecture.instructors, 3)}
+                  {getTags("instructor", lecture.instructors, 3)}
                   {lecture.instructors.length > 3 && (
                     <span className={styles.tag_more}>, 더 보기</span>
                   )}
                 </div>
                 <div className={styles.tag}>
                   <span className={styles.tag_label}>토픽:</span>
-                  {getTags(lecture.topics, 3)}
+                  {getTags("topic", lecture.topics, 3)}
                 </div>
               </div>
             </div>
@@ -199,11 +200,11 @@ const Lecture = () => {
                 </div>
                 <div className={styles.tag}>
                   <span className={styles.tag_label}>교수:</span>
-                  {getTags(lecture.instructors)}
+                  {getTags("instructor", lecture.instructors)}
                 </div>
                 <div className={styles.tag}>
                   <span className={styles.tag_label}>토픽:</span>
-                  {getTags(lecture.topics)}
+                  {getTags("topic", lecture.topics)}
                 </div>
                 <div className={styles.tag}>
                   <span className={styles.tag_label}>수강등급: </span>

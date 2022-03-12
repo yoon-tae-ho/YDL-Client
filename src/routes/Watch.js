@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import styles from "../css/Watch.module.css";
+import Header from "../components/Header";
 
 const Watch = () => {
   const [searchParams] = useSearchParams();
@@ -8,41 +10,44 @@ const Watch = () => {
   const [allow, setAllow] = useState("");
 
   useEffect(() => {
-    const domparser = new DOMParser();
-    const doc = domparser.parseFromString(
-      searchParams.get("code"),
-      "text/html"
-    );
-    const code = doc.firstChild.querySelector("iframe");
-    let {
-      src: { nodeValue: videoSrc },
-      allow: { nodeValue: videoAllow },
-    } = code.attributes;
+    const player = searchParams.get("player");
+    const code = searchParams.get("code");
+    const start = searchParams.get("start");
 
-    videoSrc += "?autoplay=1";
+    switch (player) {
+      case process.env.REACT_APP_YOUTUBE_PLAYER:
+        setSrc(
+          `https://www.youtube.com/embed/${code}?start=${start}&autoplay=1`
+        );
+        setAllow(
+          "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        );
+        break;
 
-    setSrc(videoSrc);
-    setAllow(videoAllow);
+      default:
+        break;
+    }
+
     setLoading(false);
   }, [searchParams]);
 
   return (
-    <div>
-      {loading ? (
-        "Loading..."
-      ) : (
-        <iframe
-          style={{
-            width: "100vw",
-            aspectRatio: "16 / 9",
-          }}
-          title="Lecture Video"
-          src={src}
-          allow={allow}
-          allowFullScreen
-        ></iframe>
-      )}
-    </div>
+    <>
+      <Header />
+      <main className={styles.main}>
+        {loading ? (
+          "Loading..."
+        ) : (
+          <iframe
+            className={styles.videoFrame}
+            title="Lecture Video"
+            src={src}
+            allow={allow}
+            allowFullScreen
+          ></iframe>
+        )}
+      </main>
+    </>
   );
 };
 

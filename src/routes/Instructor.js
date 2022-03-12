@@ -6,17 +6,17 @@ import NotFound from "../components/NotFound";
 import RowLoading from "../components/RowLoading";
 import RowSlider from "../components/RowSlider";
 import {
-  getLecturesOfTopic,
+  getLecturesOfInstructor,
   divideLectures,
 } from "../controllers/lectureController";
-import styles from "../css/Topic.module.css";
+import styles from "../css/Instructor.module.css";
 import { useIntersectionObserver } from "../hooks";
 
 const Topic = () => {
   const { id } = useParams();
   const [lectures, setLectures] = useState([]);
-  const [topicName, setTopicName] = useState("");
-  const [topicId, setTopicId] = useState("");
+  const [instructorName, setInstructorName] = useState("");
+  const [instructorId, setInstructorId] = useState("");
   const [fetchIndex, setFetchIndex] = useState(0);
   const [error, setError] = useState(null);
   const [ended, setEnded] = useState(false);
@@ -36,21 +36,21 @@ const Topic = () => {
   }, [id]);
 
   const requestLectures = async () => {
-    const result = await getLecturesOfTopic(id, fetchIndex);
+    const result = await getLecturesOfInstructor(id, fetchIndex);
 
     // error process
     if (!result) {
       return setEnded(true);
     }
 
-    const { topic, ended } = result;
+    const { instructor, ended } = result;
 
     if (fetchIndex === 0) {
-      setTopicName(topic.name);
-      setTopicId(topic._id);
+      setInstructorName(instructor.name);
+      setInstructorId(instructor._id);
     }
 
-    setLectures((current) => [...current, ...topic.lectures]);
+    setLectures((current) => [...current, ...instructor.lectures]);
     setFetchIndex((current) => current + 1);
     if (ended) {
       setEnded(true);
@@ -73,7 +73,7 @@ const Topic = () => {
     <>
       <Header />
       <header className={styles.header}>
-        <h1 className={styles.title}>{topicName}</h1>
+        <h1 className={styles.title}>{instructorName}</h1>
       </header>
       {error ? (
         <NotFound />
