@@ -12,14 +12,21 @@ const getPreviews = (
   CONTENT_IN_PAGE
 ) => {
   const result = lectures.map((lecture, index) => {
-    const isFirstItem =
-      pagination < MAXIMUM_PAGE
-        ? index === pagination * CONTENT_IN_PAGE
-        : index === lectures.length - CONTENT_IN_PAGE;
-    const isLastItem =
-      pagination < MAXIMUM_PAGE
-        ? index === (pagination + 1) * CONTENT_IN_PAGE - 1
-        : index === lectures.length - 1;
+    let isFirstItem = null;
+    let isLastItem = null;
+    if (lectures.length <= 5) {
+      isFirstItem = index === 0;
+      isLastItem = false;
+    } else {
+      isFirstItem =
+        pagination < MAXIMUM_PAGE
+          ? index === pagination * CONTENT_IN_PAGE
+          : index === lectures.length - CONTENT_IN_PAGE;
+      isLastItem =
+        pagination < MAXIMUM_PAGE
+          ? index === (pagination + 1) * CONTENT_IN_PAGE - 1
+          : index === lectures.length - 1;
+    }
     const props = {
       className: styles.item,
       id: lecture._id,
