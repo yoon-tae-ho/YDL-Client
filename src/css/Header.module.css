@@ -71,10 +71,15 @@
   cursor: pointer;
 }
 
+.user_wrapper {
+  height: 100%;
+}
+
 .user_container {
+  position: relative;
   display: flex;
   align-items: center;
-  height: 100%;
+  height: 50%;
   cursor: pointer;
 }
 
@@ -83,7 +88,81 @@
 }
 
 .user_thumbnail {
-  height: 50%;
+  height: 100%;
   aspect-ratio: 1 / 1;
   border-radius: var(--netflix-border-radius);
+}
+
+.user_more {
+  margin-left: 10px;
+  transition: transform 0.2s ease-in;
+}
+
+.more_active {
+  transform: rotateZ(180deg);
+}
+
+.user_menu_arrow {
+  position: absolute;
+  bottom: -12px;
+  right: 42px;
+  height: 0;
+  width: 0;
+}
+
+.user_menu {
+  position: absolute;
+  right: 0;
+  top: 58px;
+  width: 181px;
+
+  background-color: rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--netflix-white);
+  font-size: 13px;
+  line-height: 21px;
+  cursor: default;
+}
+
+.user_menu_list {
+  padding: 10px 0;
+  border-top: solid 1px rgba(255, 255, 255, 0.25);
+  cursor: default;
+}
+
+.user_menu_list:first-child {
+  border-top: none;
+}
+
+.user_menu_item {
+  padding: 5px 10px;
+  display: block;
+  font-size: 13px;
+  line-height: 16px;
+  cursor: default;
+}
+
+.user_menu_link {
+  display: flex;
+  align-items: center;
+}
+
+.user_menu_link:hover {
+  text-decoration: underline;
+}
+
+.sign_out_link {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.user_menu_icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+  color: #b3b3b3;
+  margin: 0 13px 0 5px;
 }

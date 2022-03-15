@@ -19,7 +19,7 @@ const getTags = (type, tags, limit = tags.length) => {
     result.push(
       <span className={styles.tag_item} key={tags[i]._id}>
         <Link to={`/browse/${type}s/${tags[i]._id}`}>{` ${tags[i].name}${
-          i === limit - 1 ? "" : ","
+          i === indicator - 1 ? "" : ","
         }`}</Link>
       </span>
     );

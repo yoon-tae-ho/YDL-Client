@@ -4,8 +4,29 @@ import UserContext from "../contexts/UserContext";
 import styles from "../css/Header.module.css";
 
 const Header = () => {
-  const [scroll, setScroll] = useState(0);
   const { loggedIn, user } = useContext(UserContext);
+  const [scroll, setScroll] = useState(0);
+  const [userHovered, setUserHovered] = useState(false);
+  const [userTimeoutId, setUserTimeoutId] = useState("");
+
+  const onUserMouseMove = () => {
+    if (userTimeoutId) {
+      clearTimeout(userTimeoutId);
+      setUserTimeoutId("");
+    }
+    if (!userHovered) {
+      setUserHovered(true);
+    }
+  };
+
+  const onUserMouseLeave = () => {
+    if (!userTimeoutId) {
+      const id = setTimeout(() => {
+        setUserHovered(false);
+      }, 300);
+      setUserTimeoutId(id);
+    }
+  };
 
   useEffect(() => {
     window.addEventListener("scroll", () => setScroll(window.scrollY));
@@ -38,25 +59,64 @@ const Header = () => {
         {/* <div className={styles.nav_element}>
           <i className="fas fa-bell"></i>
         </div> */}
-        <div className={styles.nav_element}>
-          {!loggedIn ? (
-            <Link to="/login">로그인</Link>
-          ) : (
-            // <Link to="/logout">로그아웃</Link>
-            <div className={styles.user_container}>
-              {!user.avatarUrl ? (
+        <div className={styles.user_wrapper}>
+          <div className={styles.nav_element}>
+            {!loggedIn ? (
+              <Link to="/login">로그인</Link>
+            ) : (
+              <div
+                className={styles.user_container}
+                onMouseMove={onUserMouseMove}
+                onMouseLeave={onUserMouseLeave}
+              >
+                {!user.avatarUrl ? (
+                  <i
+                    className={`fas fa-user-graduate ${styles.user_alt_icon}`}
+                  ></i>
+                ) : (
+                  <img
+                    className={styles.user_thumbnail}
+                    src={user.avatarUrl}
+                    alt={process.env.REACT_APP_THUMBNAIL_ALT}
+                  />
+                )}
                 <i
-                  className={`fas fa-user-graduate ${styles.user_alt_icon}`}
+                  className={`fas fa-caret-down ${styles.user_more}${
+                    userHovered ? ` ${styles.more_active}` : ""
+                  }`}
                 ></i>
-              ) : (
-                <img
-                  className={styles.user_thumbnail}
-                  src={user.avatarUrl}
-                  alt={process.env.REACT_APP_THUMBNAIL_ALT}
-                />
-              )}
-            </div>
-          )}
+                {userHovered && (
+                  <i
+                    className={`fas fa-caret-up fa-lg ${styles.user_menu_arrow}`}
+                  ></i>
+                )}
+                {userHovered && (
+                  <div className={styles.user_menu}>
+                    <ul className={styles.user_menu_list}>
+                      <li className={styles.user_menu_item}>
+                        <Link className={styles.user_menu_link} to="">
+                          <i
+                            className={`fas fa-user fa-lg ${styles.user_menu_icon}`}
+                          ></i>
+                          <span>계정</span>
+                        </Link>
+                      </li>
+                    </ul>
+                    <ul className={styles.user_menu_list}>
+                      <li className={styles.user_menu_item}>
+                        <Link
+                          className={`${styles.user_menu_link} ${styles.sign_out_link}`}
+                          to="/logout"
+                        >
+                          YDL에서 로그아웃
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
