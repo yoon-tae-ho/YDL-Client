@@ -1,15 +1,3 @@
-export const getVideoPath = (player, embededCode, start = 0) => {
-  let baseUrl = "/watch";
-  const config = {
-    player,
-    code: embededCode,
-    start,
-  };
-  const params = new URLSearchParams(config);
-  const finalUrl = `${baseUrl}?${params}`;
-  return finalUrl;
-};
-
 export const divideLectures = (lectures) => {
   const result = [];
   const count = Math.floor((lectures.length - 1) / 6) + 1;

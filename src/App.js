@@ -24,8 +24,8 @@ const App = () => {
   useEffect(() => {
     checkUser().then((result) => {
       if (result) {
-        setLoggedIn(result.loggedIn);
         setUser(result.user);
+        setLoggedIn(result.loggedIn);
       }
     });
   }, []);
@@ -53,7 +53,7 @@ const App = () => {
             <Route path="instructors/:id" element={<Instructor />} />
           </Route>
           {/* /watch */}
-          <Route path="/watch" element={<Watch />} />
+          <Route path="/watch/:id" element={<Watch />} />
           {/* user */}
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />

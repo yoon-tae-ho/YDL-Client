@@ -10,7 +10,6 @@ import LikeButton from "../components/buttons/LikeButton";
 import HateButton from "../components/buttons/HateButton";
 import MoreButton from "../components/buttons/MoreButton";
 import VideoSelector from "../components/VideoSelector";
-import { getVideoPath } from "../controllers/lectureController";
 
 const getTags = (type, tags, limit = tags.length) => {
   let result = [];
@@ -38,7 +37,7 @@ const getVideoSelectors = (videos, isExpanded) => {
       <VideoSelector
         video={videos[i]}
         index={i}
-        path={getVideoPath(videos[i].player, videos[i].embededCode)}
+        path={`/watch/${videos[i]._id}`}
         key={videos[i]._id}
       />
     );

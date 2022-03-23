@@ -1,13 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../contexts/UserContext";
-import { getVideoPath } from "../../controllers/lectureController";
 import styles from "../../css/Button.module.css";
 
 const checkViewed = (viewList, targetId) => {
   let result = -1;
   for (let i = 0; i < viewList.length; ++i) {
-    if (String(viewList[i].video.belongIn) === String(targetId)) {
+    if (String(viewList[i].lectureId) === String(targetId)) {
       result = i;
       break;
     }
@@ -29,17 +28,12 @@ const PlayButton = ({ shape, lectureId, firstVideo }) => {
 
     // viewed video
     if (playIndex !== -1) {
-      const path = getVideoPath(
-        viewed[playIndex].video.player,
-        viewed[playIndex].video.embededCode
-      );
-      return navigate(path);
+      return navigate(`/watch/${viewed[playIndex].videos[0].videoId}`);
     }
 
     // first video
     if (firstVideo) {
-      const path = getVideoPath(firstVideo.player, firstVideo.embededCode);
-      return navigate(path);
+      return navigate(`/watch/${firstVideo._id}`);
     }
   };
 
@@ -51,7 +45,7 @@ const PlayButton = ({ shape, lectureId, firstVideo }) => {
         setPlayIndex(index);
       }
     }
-  }, [viewed, lectureId]);
+  }, [viewed, lectureId, loggedIn]);
 
   // check shape
   useEffect(() => {
