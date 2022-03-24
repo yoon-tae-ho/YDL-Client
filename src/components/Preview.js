@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "../css/Preview.module.css";
 
@@ -9,6 +9,8 @@ import HateButton from "./buttons/HateButton";
 import DeleteButton from "./buttons/DeleteButton";
 import DetailButton from "./buttons/DetailButton";
 import { getFirstVideo } from "../controllers/lectureController";
+import ProgressBar from "./ProgressBar";
+import UserContext from "../contexts/UserContext";
 
 const getTopics = (topics, VISIBLE_TOPICS) => {
   const result = [];
@@ -50,11 +52,15 @@ const Preview = ({
   setPreviewHovered,
   isFirstItem,
   isLastItem,
+  sliderTopic,
 }) => {
   const VISIBLE_TOPICS = 3;
+  const { loggedIn, user } = useContext(UserContext);
   const [hovered, setHovered] = useState(false);
   const [timeoutId, setTimeoutId] = useState("");
   const [firstVideo, setFirstVideo] = useState({});
+  const [isContinueWatching, setIsContinueWatching] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const onMouseMove = () => {
     if (!timeoutId) {
@@ -91,6 +97,18 @@ const Preview = ({
     }
   }, [hovered, id]);
 
+  // get progress
+  useEffect(() => {
+    if (loggedIn && sliderTopic === process.env.REACT_APP_CONTINUE_WATCHING) {
+      const aView = user.viewed.find((aView) => aView.lectureId === id);
+      if (aView) {
+        const { time, duration } = aView.videos[0];
+        setProgress((time / duration) * 100);
+        setIsContinueWatching(true);
+      }
+    }
+  }, [loggedIn, id, user?.viewed]);
+
   return (
     <div className={`${className}`}>
       <Link
@@ -106,6 +124,11 @@ const Preview = ({
           src={thumbnailUrl}
           alt={process.env.THUMBNAIL_ALT}
         />
+        {isContinueWatching && !hovered && (
+          <div className={styles.progress}>
+            <ProgressBar progress={progress} />
+          </div>
+        )}
         <div
           className={`${styles.info_container} ${
             hovered ? styles.hoveredInfo : null

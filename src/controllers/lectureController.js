@@ -12,6 +12,16 @@ export const divideLectures = (lectures) => {
   return result;
 };
 
+export const isMongoRegex = (id) => {
+  // id regex validation
+  const regex = new RegExp(process.env.REACT_APP_MONGO_REGEX_FORMAT);
+  if (!regex.test(id)) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 // fetch
 
 export const getFirstVideo = async (lectureId) => {
@@ -35,17 +45,19 @@ export const getLecturesOfTopic = async (topicId, fetchIndex) => {
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/topics/${topicId}`,
       {
+        credentials: "include",
         headers: {
           fetch_index: fetchIndex,
         },
       }
     );
 
-    if (response.status === 404) {
-      return;
+    let data;
+    if (response.status === 200) {
+      data = await response.json();
     }
 
-    return response.json();
+    return { status: response.status, data };
   } catch (error) {
     console.log(error);
   }

@@ -32,6 +32,7 @@ const requestRandom = async (excepts) => {
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/topics/more`,
       {
+        credentials: "include",
         headers: {
           excepts: JSON.stringify(excepts),
         },

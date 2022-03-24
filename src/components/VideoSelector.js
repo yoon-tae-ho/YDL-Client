@@ -1,15 +1,37 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+import UserContext from "../contexts/UserContext";
 import styles from "../css/VideoSelector.module.css";
 import MoreButton from "./buttons/MoreButton";
+import ProgressBar from "./ProgressBar";
 
-const VideoSelector = ({ video, index, path }) => {
+const VideoSelector = ({ lectureId, video, index, path }) => {
+  const { loggedIn, user } = useContext(UserContext);
   const [hovered, setHovered] = useState(false);
   const [clamped, setClamped] = useState(true);
+  const [isContinueWatching, setIsContinueWatching] = useState(false);
+  const [progress, setProgress] = useState(0);
+
   const onMouseMove = () => !hovered && setHovered(true);
   const onMouseLeave = () => setHovered(false);
   const clickHandler = () => setClamped((current) => !current);
+
+  useEffect(() => {
+    if (loggedIn) {
+      const aView = user.viewed.find((aView) => aView.lectureId === lectureId);
+      if (aView) {
+        const videoObj = aView.videos.find(
+          (videoObj) => videoObj.videoId === video._id
+        );
+        if (videoObj) {
+          const { time, duration } = videoObj;
+          setProgress((time / duration) * 100);
+          setIsContinueWatching(true);
+        }
+      }
+    }
+  }, [lectureId, video._id, loggedIn, user?.viewed]);
 
   return (
     <Link
@@ -33,6 +55,11 @@ const VideoSelector = ({ video, index, path }) => {
               }`}
             ></i>
           </div>
+          {isContinueWatching && (
+            <div className={styles.progress}>
+              <ProgressBar progress={progress} />
+            </div>
+          )}
         </div>
         <div className={styles.video_metadataWrapper}>
           <div className={styles.video_header}>

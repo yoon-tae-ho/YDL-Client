@@ -9,7 +9,8 @@ const getPreviews = (
   setPreviewHovered,
   pagination,
   MAXIMUM_PAGE,
-  CONTENT_IN_PAGE
+  CONTENT_IN_PAGE,
+  sliderTopic
 ) => {
   const result = lectures.map((lecture, index) => {
     let isFirstItem = null;
@@ -36,6 +37,7 @@ const getPreviews = (
       setPreviewHovered,
       isFirstItem,
       isLastItem,
+      sliderTopic,
     };
     return <Preview {...props} key={lecture._id} />;
   });
@@ -149,7 +151,8 @@ const RowSlider = ({ lectures, context, topicId }) => {
                 setPreviewHovered,
                 pagination,
                 MAXIMUM_PAGE,
-                CONTENT_IN_PAGE
+                CONTENT_IN_PAGE,
+                topicId
               )}
             </div>
           </div>

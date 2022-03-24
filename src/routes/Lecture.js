@@ -26,7 +26,7 @@ const getTags = (type, tags, limit = tags.length) => {
   return result;
 };
 
-const getVideoSelectors = (videos, isExpanded) => {
+const getVideoSelectors = (videos, isExpanded, lectureId) => {
   const result = [];
   for (
     let i = 0;
@@ -35,6 +35,7 @@ const getVideoSelectors = (videos, isExpanded) => {
   ) {
     result.push(
       <VideoSelector
+        lectureId={lectureId}
         video={videos[i]}
         index={i}
         path={`/watch/${videos[i]._id}`}
@@ -166,7 +167,7 @@ const Lecture = () => {
                 </div>
               </div>
               <div className={styles.selector_container}>
-                {getVideoSelectors(lecture.videos, expanded)}
+                {getVideoSelectors(lecture.videos, expanded, id)}
                 {lecture.videos.length > 10 && (
                   <div className={`${styles.section_devider}`}>
                     <button

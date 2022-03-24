@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 import Header from "../components/Header";
 import NotFound from "../components/NotFound";
 import RowLoading from "../components/RowLoading";
 import RowSlider from "../components/RowSlider";
+import UserContext from "../contexts/UserContext";
 import {
   getLecturesOfTopic,
   divideLectures,
@@ -13,7 +14,10 @@ import styles from "../css/Topic.module.css";
 import { useIntersectionObserver } from "../hooks";
 
 const Topic = () => {
+  const { loggedIn } = useContext(UserContext);
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const [lectures, setLectures] = useState([]);
   const [topicName, setTopicName] = useState("");
   const [topicId, setTopicId] = useState("");
@@ -23,27 +27,32 @@ const Topic = () => {
   const [target, setTarget] = useState(null);
 
   useEffect(() => {
-    // id regex validation
-    const regex = new RegExp(process.env.REACT_APP_MONGO_REGEX_FORMAT);
-    if (!regex.test(id)) {
-      setError(true);
+    // const allowedNonRegex = [process.env.REACT_APP_CONTINUE_WATCHING];
+    const isLoginRequired = id === process.env.REACT_APP_CONTINUE_WATCHING;
+    if (isLoginRequired && !loggedIn) {
+      navigate("/");
     }
 
-    // initial request
     if (!error && !ended) {
+      // initial request
       requestLectures();
     }
   }, [id]);
 
   const requestLectures = async () => {
-    const result = await getLecturesOfTopic(id, fetchIndex);
+    const { status, data } = await getLecturesOfTopic(id, fetchIndex);
+
+    // unAuthorized
+    if (status === 401) {
+      return navigate("/");
+    }
 
     // error process
-    if (!result) {
+    if (status === 404) {
       return setEnded(true);
     }
 
-    const { topic, ended } = result;
+    const { topic, ended } = data;
 
     if (fetchIndex === 0) {
       setTopicName(topic.name);
