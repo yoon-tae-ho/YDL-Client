@@ -48,7 +48,7 @@ const Header = () => {
             <Link to="/browse">홈</Link>
           </li>
           <li>
-            <Link to="/browse/my-list">내가 찜한 강의</Link>
+            <Link to="/browse/topics/my-list">내가 찜한 강의</Link>
           </li>
         </ul>
       </div>

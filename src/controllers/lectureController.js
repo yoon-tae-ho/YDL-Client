@@ -1,4 +1,8 @@
 export const divideLectures = (lectures) => {
+  if (!lectures || lectures.length === 0) {
+    return [];
+  }
+
   const result = [];
   const count = Math.floor((lectures.length - 1) / 6) + 1;
   const SCALE = 6;
@@ -15,11 +19,7 @@ export const divideLectures = (lectures) => {
 export const isMongoRegex = (id) => {
   // id regex validation
   const regex = new RegExp(process.env.REACT_APP_MONGO_REGEX_FORMAT);
-  if (!regex.test(id)) {
-    return true;
-  } else {
-    return false;
-  }
+  return regex.test(id);
 };
 
 // fetch

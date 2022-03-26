@@ -14,7 +14,7 @@ import styles from "../css/Topic.module.css";
 import { useIntersectionObserver } from "../hooks";
 
 const Topic = () => {
-  const { loggedIn } = useContext(UserContext);
+  const { loggedIn, user } = useContext(UserContext);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -26,21 +26,8 @@ const Topic = () => {
   const [ended, setEnded] = useState(false);
   const [target, setTarget] = useState(null);
 
-  useEffect(() => {
-    // const allowedNonRegex = [process.env.REACT_APP_CONTINUE_WATCHING];
-    const isLoginRequired = id === process.env.REACT_APP_CONTINUE_WATCHING;
-    if (isLoginRequired && !loggedIn) {
-      navigate("/");
-    }
-
-    if (!error && !ended) {
-      // initial request
-      requestLectures();
-    }
-  }, [id]);
-
-  const requestLectures = async () => {
-    const { status, data } = await getLecturesOfTopic(id, fetchIndex);
+  const requestLectures = async (index) => {
+    const { status, data } = await getLecturesOfTopic(id, index);
 
     // unAuthorized
     if (status === 401) {
@@ -49,26 +36,31 @@ const Topic = () => {
 
     // error process
     if (status === 404) {
-      return setEnded(true);
+      if (index === 0) {
+        setEnded(true);
+        return setError(true);
+      } else {
+        return setEnded(true);
+      }
     }
 
     const { topic, ended } = data;
 
-    if (fetchIndex === 0) {
-      setTopicName(topic.name);
-      setTopicId(topic._id);
-    }
+    setTopicName(topic.name);
+    setTopicId(topic._id);
 
-    setLectures((current) => [...current, ...topic.lectures]);
-    setFetchIndex((current) => current + 1);
     if (ended) {
       setEnded(true);
     }
+    return topic.lectures;
   };
 
   const onIntersect = () => {
     if (lectures.length > 0 && !ended) {
-      requestLectures();
+      requestLectures(fetchIndex).then((newLectures) => {
+        setLectures((current) => [...current, ...newLectures]);
+        setFetchIndex((current) => current + 1);
+      });
     }
   };
 
@@ -77,6 +69,51 @@ const Topic = () => {
     target: target,
     onIntersect,
   });
+
+  useEffect(() => {
+    const allowedNonRegex = [
+      process.env.REACT_APP_CONTINUE_WATCHING,
+      process.env.REACT_APP_MY_LIST,
+    ];
+    const isIncluded = allowedNonRegex.includes(id);
+    if (isIncluded && !loggedIn) {
+      navigate("/login");
+    }
+
+    // initial request
+    setError(false);
+    setEnded(false);
+    setFetchIndex(0);
+    setLectures([]);
+    setTopicName("");
+    setTopicId("");
+    setTarget(null);
+    requestLectures(0).then((newLectures) => {
+      setLectures(newLectures);
+      setFetchIndex(1);
+    });
+  }, [id, loggedIn]);
+
+  useEffect(() => {
+    if (
+      !loggedIn ||
+      id !== process.env.REACT_APP_MY_LIST ||
+      lectures.length === 0
+    ) {
+      return;
+    }
+
+    let i;
+    for (i = 0; i < lectures.length; ++i) {
+      if (!user.booked.includes(lectures[i]._id)) {
+        break;
+      }
+    }
+
+    if (i < lectures.length) {
+      setLectures((current) => current.filter((_, index) => index !== i));
+    }
+  }, [id, loggedIn, user?.booked]);
 
   return (
     <>
