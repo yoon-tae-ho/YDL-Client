@@ -94,7 +94,7 @@ const Topic = () => {
                 key={`lecture_chunk_${index}`}
                 ref={index === 5 * (fetchIndex - 1) + 4 ? setTarget : null}
               >
-                <RowSlider lectures={lectureChunk} />
+                <RowSlider lectures={lectureChunk} topicId={topicId} />
               </div>
             ))}
           </div>

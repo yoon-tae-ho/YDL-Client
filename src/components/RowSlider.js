@@ -84,14 +84,14 @@ const RowSlider = ({ lectures, context, topicId }) => {
       onMouseLeave={onRowLeave}
     >
       <h2 className={styles.rowHeader}>
-        {topicId && (
+        {topicId && context && (
           <Link
             to={`/browse/topics/${topicId}`}
             className={styles.rowLink}
             onMouseMove={onLinkMove}
             onMouseLeave={onLinkLeave}
           >
-            {context && <div className={styles.rowTitle}>{context}</div>}
+            <div className={styles.rowTitle}>{context}</div>
             <div className={styles.arrow}>
               <div
                 className={`${styles.arrowText} ${

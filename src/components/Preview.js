@@ -60,6 +60,7 @@ const Preview = ({
   const [timeoutId, setTimeoutId] = useState("");
   const [firstVideo, setFirstVideo] = useState({});
   const [isContinueWatching, setIsContinueWatching] = useState(false);
+  const [videoInfo, setVideoInfo] = useState({});
   const [progress, setProgress] = useState(0);
 
   const onMouseMove = () => {
@@ -103,11 +104,12 @@ const Preview = ({
       const aView = user.viewed.find((aView) => aView.lectureId === id);
       if (aView) {
         const { time, duration } = aView.videos[0];
+        setVideoInfo(aView.videos[0]);
         setProgress((time / duration) * 100);
         setIsContinueWatching(true);
       }
     }
-  }, [loggedIn, id, user?.viewed]);
+  }, [loggedIn, id, user?.viewed, sliderTopic]);
 
   return (
     <div className={`${className}`}>
@@ -150,11 +152,29 @@ const Preview = ({
           >
             {title}
           </h2>
-          {hovered && (
-            <ul className={styles.topicList}>
-              {getTopics(topics, VISIBLE_TOPICS)}
-            </ul>
-          )}
+          {hovered &&
+            (isContinueWatching ? (
+              <div className={styles.watching_info}>
+                <span className={styles.watching_text}>
+                  <strong className={styles.strong}>{`${
+                    videoInfo.videoIndex + 1
+                  }강`}</strong>
+                  {` "${videoInfo.videoTitle}"`}
+                </span>
+                <div className={styles.progress_container}>
+                  <div className={styles.progress_hovered}>
+                    <ProgressBar progress={progress} />
+                  </div>
+                  <span className={styles.progress_text}>{`총 ${Math.floor(
+                    videoInfo.duration / 60
+                  )}분 중 ${Math.floor(videoInfo.time / 60)}분`}</span>
+                </div>
+              </div>
+            ) : (
+              <ul className={styles.topicList}>
+                {getTopics(topics, VISIBLE_TOPICS)}
+              </ul>
+            ))}
         </div>
       </Link>
     </div>

@@ -44,7 +44,8 @@
 .topicList {
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 9px;
+  margin-bottom: 1.3em;
+  line-height: 1.3em;
 }
 
 .topicItem {
@@ -104,4 +105,40 @@
   left: 0;
   right: 0;
   height: 4px;
+}
+
+.watching_text {
+  display: block;
+  width: 100%;
+  margin-bottom: 1em;
+  font-size: 0.4vw;
+  font-weight: 300;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 2.4em;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.strong {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+}
+
+.progress_container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.3em;
+}
+
+.progress_hovered {
+  height: 2px;
+  flex-grow: 1;
+}
+
+.progress_text {
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 0 8px;
+  font-weight: 600;
+  font-size: 0.9em;
 }
