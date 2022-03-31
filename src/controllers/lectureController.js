@@ -83,3 +83,26 @@ export const getLecturesOfInstructor = async (instructorId, fetchIndex) => {
     console.log(error);
   }
 };
+
+export const searchLectures = async (keyword, excepts) => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/lectures/search/${keyword}`,
+      {
+        credentials: "include",
+        headers: {
+          excepts: JSON.stringify(excepts),
+        },
+      }
+    );
+
+    let data;
+    if (response.status === 200) {
+      data = await response.json();
+    }
+
+    return { status: response.status, data };
+  } catch (error) {
+    console.log(error);
+  }
+};

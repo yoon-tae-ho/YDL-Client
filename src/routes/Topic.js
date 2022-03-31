@@ -31,7 +31,7 @@ const Topic = () => {
 
     // unAuthorized
     if (status === 401) {
-      return navigate("/");
+      return navigate("/login");
     }
 
     // error process
@@ -77,7 +77,7 @@ const Topic = () => {
     ];
     const isIncluded = allowedNonRegex.includes(id);
     if (isIncluded && !loggedIn) {
-      navigate("/login");
+      return navigate("/login");
     }
 
     // initial request
@@ -135,7 +135,7 @@ const Topic = () => {
               </div>
             ))}
           </div>
-          {ended ? null : <RowLoading header={true} />}
+          {!ended && <RowLoading header={true} />}
         </main>
       )}
     </>

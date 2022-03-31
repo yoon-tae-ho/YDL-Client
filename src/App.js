@@ -13,13 +13,19 @@ import Topic from "./routes/Topic";
 import Instructor from "./routes/Instructor";
 import Login from "./routes/Login";
 import Logout from "./routes/Logout";
+import Search from "./routes/Search";
 
 import UserContext from "./contexts/UserContext";
+import SearchContext from "./contexts/SearchContext";
 import { checkUser } from "./controllers/userController";
 
 const App = () => {
+  // UserContext
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState({});
+  // SearchContext
+  const [isSearching, setIsSearching] = useState(false);
+  const [text, setText] = useState("");
 
   useEffect(() => {
     checkUser().then((result) => {
@@ -30,7 +36,7 @@ const App = () => {
     });
   }, []);
 
-  const value = useMemo(
+  const userValue = useMemo(
     () => ({
       loggedIn,
       setLoggedIn,
@@ -40,25 +46,39 @@ const App = () => {
     [loggedIn, setLoggedIn, user, setUser]
   );
 
+  const searchValue = useMemo(
+    () => ({
+      isSearching,
+      setIsSearching,
+      text,
+      setText,
+    }),
+    [isSearching, setIsSearching, text, setText]
+  );
+
   return (
-    <UserContext.Provider value={value}>
-      <Router>
-        <Routes>
-          {/* /browse */}
-          <Route path="/" element={<Navigate to="/browse" />} />
-          <Route path="/browse">
-            <Route path="" element={<Browse />} />
-            <Route path=":id" element={<Lecture />} />
-            <Route path="topics/:id" element={<Topic />} />
-            <Route path="instructors/:id" element={<Instructor />} />
-          </Route>
-          {/* /watch */}
-          <Route path="/watch/:id" element={<Watch />} />
-          {/* user */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/logout" element={<Logout />} />
-        </Routes>
-      </Router>
+    <UserContext.Provider value={userValue}>
+      <SearchContext.Provider value={searchValue}>
+        <Router>
+          <Routes>
+            {/* /search */}
+            <Route path="/search" element={<Search />} />
+            {/* /browse */}
+            <Route path="/" element={<Navigate to="/browse" />} />
+            <Route path="/browse">
+              <Route path="" element={<Browse />} />
+              <Route path=":id" element={<Lecture />} />
+              <Route path="topics/:id" element={<Topic />} />
+              <Route path="instructors/:id" element={<Instructor />} />
+            </Route>
+            {/* /watch */}
+            <Route path="/watch/:id" element={<Watch />} />
+            {/* user */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/logout" element={<Logout />} />
+          </Routes>
+        </Router>
+      </SearchContext.Provider>
     </UserContext.Provider>
   );
 };
