@@ -1,0 +1,22 @@
+.background {
+  position: absolute;
+  top: 1vw;
+  right: 1vw;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 20%;
+  aspect-ratio: 1 / 1;
+  padding: 2%;
+  border-radius: var(--netflix-border-radius);
+
+  background-color: var(--netflix-white);
+  box-shadow: var(--apple-box-shadow);
+}
+
+.symbol {
+  width: 100%;
+  height: 100%;
+}

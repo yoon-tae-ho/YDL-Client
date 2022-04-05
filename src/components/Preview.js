@@ -11,6 +11,32 @@ import DetailButton from "./buttons/DetailButton";
 import { getFirstVideo } from "../controllers/lectureController";
 import ProgressBar from "./ProgressBar";
 import UserContext from "../contexts/UserContext";
+import Flag from "./Flag";
+
+const getFlagSrc = (institute) => {
+  let imgSrc = "";
+  switch (institute) {
+    case "Massachusetts Institute of Technology":
+      imgSrc =
+        "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg";
+      break;
+    case "Oxford University":
+      imgSrc =
+        "https://upload.wikimedia.org/wikipedia/commons/f/ff/Oxford-University-Circlet.svg";
+      break;
+    case "Yale University":
+      imgSrc =
+        "https://upload.wikimedia.org/wikipedia/commons/0/07/Yale_University_Shield_1.svg";
+      break;
+    case "Stanford University":
+      imgSrc =
+        "https://upload.wikimedia.org/wikipedia/commons/c/c8/Logo_of_Stanford_University.png";
+      break;
+    default:
+      break;
+  }
+  return imgSrc;
+};
 
 const getTopics = (topics, VISIBLE_TOPICS) => {
   const result = [];
@@ -47,8 +73,9 @@ const Preview = ({
   className,
   id,
   title,
-  thumbnailUrl,
   topics,
+  institute,
+  thumbnailUrl,
   setPreviewHovered,
   isFirstItem,
   isLastItem,
@@ -126,6 +153,7 @@ const Preview = ({
           src={thumbnailUrl}
           alt={process.env.THUMBNAIL_ALT}
         />
+        <Flag imgSrc={getFlagSrc(institute)} />
         {isContinueWatching && !hovered && (
           <div className={styles.progress}>
             <ProgressBar progress={progress} />
