@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-import NotFound from "../components/NotFound";
 import styles from "../css/Lecture.module.css";
 import buttonStyles from "../css/Button.module.css";
 import PlayButton from "../components/buttons/PlayButton";
@@ -10,6 +9,7 @@ import LikeButton from "../components/buttons/LikeButton";
 import HateButton from "../components/buttons/HateButton";
 import MoreButton from "../components/buttons/MoreButton";
 import VideoSelector from "../components/VideoSelector";
+import VideoLoading from "../components/VideoLoading";
 
 const getTags = (type, tags, limit = tags.length) => {
   let result = [];
@@ -51,15 +51,18 @@ const Lecture = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [lecture, setLecture] = useState(null);
-  const [error, setError] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const [clamped, setClamped] = useState(true);
+
+  const processError = () => {
+    navigate("/", { replace: true });
+  };
 
   // id regex validation
   useEffect(() => {
     const regex = new RegExp(process.env.REACT_APP_MONGO_REGEX_FORMAT);
     if (!regex.test(id)) {
-      setError(true);
+      return processError();
     }
   }, [id]);
 
@@ -68,9 +71,8 @@ const Lecture = () => {
       .then((response) => {
         if (response.status === 404) {
           // error process
-          setError(true);
           setLoading(false);
-          return;
+          return processError();
         }
         return response.json();
       })
@@ -86,9 +88,7 @@ const Lecture = () => {
   return (
     <div>
       {loading ? (
-        "Loading..."
-      ) : error ? (
-        <NotFound />
+        <VideoLoading />
       ) : (
         <div className={styles.lecture_container}>
           <img

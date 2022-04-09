@@ -21,6 +21,7 @@ const Search = () => {
   const [lectures, setLectures] = useState([]);
   const [fetchIndex, setFetchIndex] = useState(0);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [ended, setEnded] = useState(false);
   const [target, setTarget] = useState(null);
 
@@ -28,6 +29,8 @@ const Search = () => {
     if (!keyword) {
       return;
     }
+
+    setLoading(true);
 
     let excepts = [];
     if (index !== 0) {
@@ -38,22 +41,22 @@ const Search = () => {
 
     // bad request (keyword === "")
     if (status === 400) {
-      return;
+      return setLoading(false);
     }
 
     // error process
     if (status === 404) {
+      setEnded(true);
+      setLoading(false);
       if (index === 0) {
-        setEnded(true);
         return setError(true);
-      } else {
-        return setEnded(true);
       }
     }
 
     if (data.ended) {
       setEnded(true);
     }
+    setLoading(false);
     return data.lectures;
   };
 
@@ -115,7 +118,7 @@ const Search = () => {
           </div>
         </main>
       )}
-      <Footer />
+      {!loading && <Footer />}
     </>
   );
 };
