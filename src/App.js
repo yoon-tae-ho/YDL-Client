@@ -52,6 +52,12 @@ const App = () => {
       setIsSearching,
       text,
       setText,
+      stopSearching: () => {
+        if (isSearching) {
+          setIsSearching(false);
+          setText("");
+        }
+      },
     }),
     [isSearching, setIsSearching, text, setText]
   );

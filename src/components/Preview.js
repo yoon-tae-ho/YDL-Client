@@ -12,6 +12,7 @@ import { getFirstVideo } from "../controllers/lectureController";
 import ProgressBar from "./ProgressBar";
 import UserContext from "../contexts/UserContext";
 import Flag from "./Flag";
+import SearchContext from "../contexts/SearchContext";
 
 const getFlagSrc = (institute) => {
   let imgSrc = "";
@@ -83,6 +84,7 @@ const Preview = ({
 }) => {
   const VISIBLE_TOPICS = 3;
   const { loggedIn, user } = useContext(UserContext);
+  const { stopSearching } = useContext(SearchContext);
   const [hovered, setHovered] = useState(false);
   const [timeoutId, setTimeoutId] = useState("");
   const [firstVideo, setFirstVideo] = useState({});
@@ -145,6 +147,7 @@ const Preview = ({
         to={`/browse/${id}`}
         onMouseMove={onMouseMove}
         onMouseLeave={onMouseLeave}
+        onClick={stopSearching}
       >
         <img
           className={`${styles.thumbnail} ${

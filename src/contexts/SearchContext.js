@@ -5,6 +5,7 @@ const SearchContext = createContext({
   setIsSearching: () => {},
   text: "",
   setText: () => {},
+  stopSearching: () => {},
 });
 
 export default SearchContext;

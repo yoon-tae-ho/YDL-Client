@@ -11,7 +11,7 @@ const focusInput = (input) => {
 };
 
 const Header = () => {
-  const { isSearching, setIsSearching, text, setText } =
+  const { isSearching, setIsSearching, text, setText, stopSearching } =
     useContext(SearchContext);
 
   const { loggedIn, user } = useContext(UserContext);
@@ -71,13 +71,6 @@ const Header = () => {
   const onRefreshClick = () => {
     setText("");
     navigate(-1, { replace: true });
-  };
-
-  const stopSearching = () => {
-    if (isSearching) {
-      setIsSearching(false);
-      setText("");
-    }
   };
 
   useEffect(() => {
