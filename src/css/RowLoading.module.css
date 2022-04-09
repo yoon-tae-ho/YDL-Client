@@ -1,3 +1,7 @@
+:root {
+  --loading-color: #1a1a1a;
+}
+
 .row {
   width: 100%;
   margin: 3vw 0;
@@ -13,13 +17,38 @@
   margin: 0 4%;
   margin-bottom: 0.5em;
   font-size: 1.4vw;
-  background-color: bisque;
+  background-color: var(--loading-color);
 }
 
 .content {
   width: 100%;
-  height: calc(92vw / 6 * 9 / 16 + 0.8vw + 14px); /* slider height */
   padding: 0 4%;
+  white-space: nowrap;
+  overflow: hidden;
+}
 
-  background-color: beige;
+@keyframes loadingAnim {
+  0% {
+    filter: brightness(1);
+  }
+  25% {
+    filter: brightness(2);
+  }
+  50% {
+    filter: brightness(1);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+.item {
+  display: inline-block;
+  width: calc(100% / 6 - 0.4vw);
+  aspect-ratio: 16 / 9;
+  margin: 0 0.2vw;
+  border-radius: var(--netflix-border-radius);
+  background-color: var(--loading-color);
+
+  animation: loadingAnim 3.6s infinite ease-in-out;
 }
