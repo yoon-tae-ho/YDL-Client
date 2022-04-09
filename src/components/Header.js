@@ -13,7 +13,6 @@ const focusInput = (input) => {
 const Header = () => {
   const { isSearching, setIsSearching, text, setText, stopSearching } =
     useContext(SearchContext);
-
   const { loggedIn, user } = useContext(UserContext);
   const [scroll, setScroll] = useState(0);
   const [userHovered, setUserHovered] = useState(false);
@@ -74,11 +73,17 @@ const Header = () => {
   };
 
   useEffect(() => {
-    window.addEventListener("scroll", () => setScroll(window.scrollY));
-    return window.removeEventListener("scroll", () =>
-      setScroll(window.scrollY)
-    );
-  }, []);
+    const handleScroll = () => {
+      const y = window.scrollY;
+      if (y === 0) {
+        setScroll(0);
+      } else if (scroll === 0) {
+        setScroll(y);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [scroll]);
 
   useEffect(() => {
     if (isSearching) {
