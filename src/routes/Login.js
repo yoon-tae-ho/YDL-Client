@@ -15,7 +15,7 @@ const Login = () => {
 
   useEffect(() => {
     if (loggedIn) {
-      window.history.back();
+      navigate("/", { replace: true });
     }
   }, [loggedIn]);
 

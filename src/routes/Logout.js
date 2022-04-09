@@ -15,7 +15,7 @@ const Logout = () => {
         navigate("/");
         window.location.reload();
       } else if (status === 401) {
-        navigate("/login");
+        navigate("/login", { replace: true });
       }
     });
   }, []);

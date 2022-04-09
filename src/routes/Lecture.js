@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import NotFound from "../components/NotFound";
 import styles from "../css/Lecture.module.css";
@@ -48,6 +48,7 @@ const getVideoSelectors = (videos, isExpanded, lectureId) => {
 
 const Lecture = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [lecture, setLecture] = useState(null);
   const [error, setError] = useState(null);
@@ -80,10 +81,6 @@ const Lecture = () => {
       .catch((error) => console.log(error));
   }, [id]);
 
-  const onBackBtnClick = () => {
-    window.history.back();
-  };
-
   const onDivideBtnClick = () => setExpanded((current) => !current);
 
   return (
@@ -106,7 +103,7 @@ const Lecture = () => {
               alt={process.env.REACT_APP_THUMBNAIL_ALT}
             />
             <div className={styles.lecture_previewWrapper}></div>
-            <button className={styles.back_button} onClick={onBackBtnClick}>
+            <button className={styles.back_button} onClick={() => navigate(-1)}>
               <i className="fas fa-arrow-left fa-lg"></i>
             </button>
             <div className={styles.lecture_controls}>

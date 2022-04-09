@@ -64,7 +64,7 @@ const App = () => {
             {/* /search */}
             <Route path="/search" element={<Search />} />
             {/* /browse */}
-            <Route path="/" element={<Navigate to="/browse" />} />
+            <Route path="/" element={<Navigate replace to="/browse" />} />
             <Route path="/browse">
               <Route path="" element={<Browse />} />
               <Route path=":id" element={<Lecture />} />
