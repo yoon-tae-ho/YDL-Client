@@ -1,0 +1,16 @@
+.footer {
+  max-width: 980px;
+  margin: 100px auto 50px;
+  padding: 0 4%;
+  color: grey;
+}
+
+.text {
+  font-size: 11px;
+  margin-bottom: 15px;
+}
+
+.text_block {
+  display: block;
+  margin-top: 4px;
+}

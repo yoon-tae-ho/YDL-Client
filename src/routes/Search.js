@@ -11,6 +11,7 @@ import {
 } from "../controllers/lectureController";
 import styles from "../css/Search.module.css";
 import { useIntersectionObserver } from "../hooks";
+import Footer from "../components/Footer";
 
 const Search = () => {
   const { isSearching, setIsSearching, text, setText } =
@@ -114,6 +115,7 @@ const Search = () => {
           </div>
         </main>
       )}
+      <Footer />
     </>
   );
 };

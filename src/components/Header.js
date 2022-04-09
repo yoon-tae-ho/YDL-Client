@@ -92,7 +92,7 @@ const Header = () => {
   }, [isSearching]);
 
   return (
-    <div
+    <hearder
       className={`${styles.header} ${scroll === 0 ? styles.transparent : null}`}
     >
       <div className={styles.header_column}>
@@ -220,7 +220,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-    </div>
+    </hearder>
   );
 };
 

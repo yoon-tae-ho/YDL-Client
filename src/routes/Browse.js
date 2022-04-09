@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import RowSlider from "../components/RowSlider";
 import RowLoading from "../components/RowLoading";
 import { useIntersectionObserver } from "../hooks";
+import Footer from "../components/Footer";
 
 const requestInitial = async () => {
   try {
@@ -119,6 +120,7 @@ const Browse = () => {
         </div>
         {ended ? null : <RowLoading header={true} />}
       </main>
+      <Footer />
     </>
   );
 };

@@ -8,6 +8,7 @@ import Naver from "../images/naver_logo.svg";
 import Github from "../images/github_logo.svg";
 import UserContext from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
 
 const Login = () => {
   const { loggedIn } = useContext(UserContext);
@@ -99,6 +100,7 @@ const Login = () => {
           </div>
         </main>
       </div>
+      <Footer />
     </>
   );
 };

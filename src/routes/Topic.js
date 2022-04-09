@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Footer from "../components/Footer";
 
 import Header from "../components/Header";
 import NotFound from "../components/NotFound";
@@ -138,6 +139,7 @@ const Topic = () => {
           {!ended && <RowLoading header={true} />}
         </main>
       )}
+      <Footer />
     </>
   );
 };
