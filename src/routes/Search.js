@@ -20,8 +20,8 @@ const Search = () => {
 
   const [lectures, setLectures] = useState([]);
   const [fetchIndex, setFetchIndex] = useState(0);
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [ended, setEnded] = useState(false);
   const [target, setTarget] = useState(null);
 
@@ -86,6 +86,7 @@ const Search = () => {
     // initial request
     setLectures([]);
     setFetchIndex(0);
+    setLoading(true);
     setError(false);
     setEnded(false);
     setTarget(null);
