@@ -205,11 +205,13 @@ const Lecture = () => {
                 </div>
                 <div className={styles.tag}>
                   <span className={styles.tag_label}>수강등급: </span>
-                  <span
-                    className={`${styles.tag_item} ${styles.tag_item_notLink}`}
-                  >
-                    {lecture.level}
-                  </span>
+                  {lecture.levels.map((level, i) => (
+                    <span
+                      className={`${styles.tag_item} ${styles.tag_item_notLink}`}
+                    >
+                      {`${level}${i < lecture.levels.length - 1 ? ", " : ""}`}
+                    </span>
+                  ))}
                 </div>
                 <div className={styles.tag}>
                   <span className={styles.tag_label}>강의연도: </span>
