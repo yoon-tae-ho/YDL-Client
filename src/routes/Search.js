@@ -57,14 +57,17 @@ const Search = () => {
       setEnded(true);
     }
     setLoading(false);
+    setError(false);
     return data.lectures;
   };
 
   const onIntersect = () => {
     if (lectures.length > 0 && !ended) {
       requestLectures(text, fetchIndex).then((newLectures) => {
-        setLectures((current) => [...current, ...newLectures]);
-        setFetchIndex((current) => current + 1);
+        if (newLectures) {
+          setLectures((current) => [...current, ...newLectures]);
+          setFetchIndex((current) => current + 1);
+        }
       });
     }
   };
@@ -77,22 +80,27 @@ const Search = () => {
 
   useEffect(() => {
     const keyword = searchParams.get("q");
+
     // set SearchContext
     if (!isSearching) {
       setIsSearching(true);
     }
     setText(keyword);
 
-    // initial request
+    // state initilize
     setLectures([]);
     setFetchIndex(0);
     setLoading(true);
-    setError(false);
+    setError(null);
     setEnded(false);
     setTarget(null);
+
+    // initial request
     requestLectures(keyword, 0).then((newLectures) => {
-      setLectures(newLectures);
-      setFetchIndex(1);
+      if (newLectures) {
+        setLectures(newLectures);
+        setFetchIndex(1);
+      }
     });
   }, [searchParams]);
 
