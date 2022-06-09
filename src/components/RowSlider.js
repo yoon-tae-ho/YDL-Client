@@ -172,4 +172,4 @@ const RowSlider = ({ lectures, context, topicId }) => {
   );
 };
 
-export default RowSlider;
+export default React.memo(RowSlider);
