@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import YouTube from "react-youtube";
+import { useQuery } from "@tanstack/react-query";
 
 import styles from "../css/Watch.module.css";
 import Header from "../components/Header";
@@ -25,12 +26,28 @@ const Watch = () => {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [isViewExist, setIsViewExist] = useState(true);
 
   const [src, setSrc] = useState("");
   const [allow, setAllow] = useState(
     "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
   );
   const [player, setPlayer] = useState("");
+
+  useQuery(["watching", id], () => getVideoInfo(id), {
+    enabled: !isViewExist,
+    onSuccess: (data) => {
+      const {
+        status,
+        data: { embededCode, player },
+      } = data;
+      if (status === 404) {
+        return setError(true);
+      }
+      setIframe(embededCode, player);
+      setLoading(false);
+    },
+  });
 
   // Youtube Only
   const [code, setCode] = useState("");
@@ -121,20 +138,12 @@ const Watch = () => {
 
     if (!loggedIn || !aView) {
       // did not watch it
-      getVideoInfo(id).then(({ status, data }) => {
-        if (status === 404) {
-          return setError(true);
-        }
-
-        const { embededCode, player } = data;
-        setIframe(embededCode, player);
-      });
+      setIsViewExist(false);
     } else {
       const { videoCode, player, time } = aView.videos[index];
       setIframe(videoCode, player, time);
+      setLoading(false);
     }
-
-    setLoading(false);
   }, [loggedIn, id]);
 
   return (
@@ -149,7 +158,7 @@ const Watch = () => {
           ) : player === process.env.REACT_APP_YOUTUBE_PLAYER ? (
             <YouTube
               id="player"
-              containerClassName={styles.videoFrame}
+              className={styles.videoFrame}
               videoId={code}
               opts={opts}
               onReady={onYoutubeReady}

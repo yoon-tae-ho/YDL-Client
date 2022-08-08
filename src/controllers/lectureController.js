@@ -106,3 +106,9 @@ export const searchLectures = async (keyword, excepts) => {
     console.log(error);
   }
 };
+
+export const getLectureDetail = async (id) => {
+  return await (
+    await fetch(`${process.env.REACT_APP_API_URL}/lectures/${id}`)
+  ).json();
+};

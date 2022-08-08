@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
 import styles from "../css/Lecture.module.css";
 import buttonStyles from "../css/Button.module.css";
@@ -10,6 +11,7 @@ import HateButton from "../components/buttons/HateButton";
 import MoreButton from "../components/buttons/MoreButton";
 import VideoSelector from "../components/VideoSelector";
 import VideoLoading from "../components/VideoLoading";
+import { getLectureDetail } from "../controllers/lectureController";
 
 const getTags = (type, tags, limit = tags.length) => {
   let result = [];
@@ -49,10 +51,16 @@ const getVideoSelectors = (videos, isExpanded, lectureId) => {
 const Lecture = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [lecture, setLecture] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const [clamped, setClamped] = useState(true);
+
+  const { isLoading: loading, data: lecture } = useQuery(
+    ["lectureDetail", id],
+    () => getLectureDetail(id),
+    {
+      onError: () => processError(),
+    }
+  );
 
   const processError = () => {
     navigate("/", { replace: true });
@@ -64,23 +72,6 @@ const Lecture = () => {
     if (!regex.test(id)) {
       return processError();
     }
-  }, [id]);
-
-  useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/lectures/${id}`)
-      .then((response) => {
-        if (response.status === 404) {
-          // error process
-          setLoading(false);
-          return processError();
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setLecture(data);
-        setLoading(false);
-      })
-      .catch((error) => console.log(error));
   }, [id]);
 
   const onDivideBtnClick = () => setExpanded((current) => !current);
@@ -208,6 +199,7 @@ const Lecture = () => {
                   {lecture.levels.map((level, i) => (
                     <span
                       className={`${styles.tag_item} ${styles.tag_item_notLink}`}
+                      key={i}
                     >
                       {`${level}${i < lecture.levels.length - 1 ? ", " : ""}`}
                     </span>

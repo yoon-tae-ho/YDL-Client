@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import styles from "../css/Preview.module.css";
+import { useQuery } from "@tanstack/react-query";
 
+import styles from "../css/Preview.module.css";
 import PlayButton from "./buttons/PlayButton";
 import BookButton from "./buttons/BookButton";
 import LikeButton from "./buttons/LikeButton";
@@ -87,10 +88,18 @@ const Preview = ({
   const { stopSearching } = useContext(SearchContext);
   const [hovered, setHovered] = useState(false);
   const [timeoutId, setTimeoutId] = useState("");
-  const [firstVideo, setFirstVideo] = useState({});
   const [isContinueWatching, setIsContinueWatching] = useState(false);
   const [videoInfo, setVideoInfo] = useState({});
   const [progress, setProgress] = useState(0);
+
+  // fetch first video's embededCode and player when hovered
+  const { data: firstVideo } = useQuery(
+    ["firstVideo", id],
+    () => getFirstVideo(id),
+    {
+      enabled: hovered,
+    }
+  );
 
   const onMouseMove = () => {
     if (!timeoutId) {
@@ -115,17 +124,6 @@ const Preview = ({
 
   // makes belonged content's z-index bigger.
   useEffect(() => setPreviewHovered(hovered), [setPreviewHovered, hovered]);
-
-  // fetch first video's embededCode and player when hovered
-  useEffect(() => {
-    if (hovered) {
-      getFirstVideo(id).then((video) => {
-        if (video) {
-          setFirstVideo(video);
-        }
-      });
-    }
-  }, [hovered, id]);
 
   // get progress
   useEffect(() => {
