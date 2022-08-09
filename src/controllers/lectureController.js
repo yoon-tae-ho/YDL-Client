@@ -64,22 +64,30 @@ export const getLecturesOfTopic = async (topicId, fetchIndex) => {
   }
 };
 
-export const getLecturesOfInstructor = async (instructorId, fetchIndex) => {
+export const getLecturesOfInstructor = async (instructorId, pageParam) => {
   try {
     const response = await fetch(
       `${BASE_URL}/topics/instructors/${instructorId}`,
       {
         headers: {
-          fetch_index: fetchIndex,
+          fetch_index: pageParam - 1,
         },
       }
     );
 
     if (response.status === 404) {
-      return;
+      return { isError: true };
     }
 
-    return response.json();
+    const data = await response.json();
+    const { instructor, ended } = data;
+
+    return {
+      result: instructor,
+      nextPage: pageParam + 1,
+      isLast: ended,
+      isError: false,
+    };
   } catch (error) {
     console.log(error);
   }

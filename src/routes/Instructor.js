@@ -1,3 +1,4 @@
+import { useInfiniteQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Footer from "../components/Footer";
@@ -17,11 +18,32 @@ const Topic = () => {
   const { id } = useParams();
   const [lectures, setLectures] = useState([]);
   const [instructorName, setInstructorName] = useState("");
-  const [instructorId, setInstructorId] = useState("");
-  const [fetchIndex, setFetchIndex] = useState(0);
   const [error, setError] = useState(null);
-  const [ended, setEnded] = useState(false);
   const [target, setTarget] = useState(null);
+
+  const { fetchNextPage, hasNextPage, data } = useInfiniteQuery(
+    ["lectures", "instructor", id],
+    ({ pageParam = 1 }) => getLecturesOfInstructor(id, pageParam),
+    {
+      getNextPageParam: (lastPage, pages) =>
+        lastPage.isLast ? undefined : lastPage.nextPage,
+      onSuccess: (data) => {
+        if (data.pages[data.pages.length - 1].isError) {
+          return setError(true);
+        }
+
+        // first page
+        if (data.pages.length === 1) {
+          setInstructorName(data.pages[0].result.name);
+        }
+        setLectures((current) => [
+          ...current,
+          ...data.pages[data.pages.length - 1].result.lectures,
+        ]);
+      },
+      onError: () => setError(true),
+    }
+  );
 
   useEffect(() => {
     // id regex validation
@@ -29,45 +51,14 @@ const Topic = () => {
     if (!regex.test(id)) {
       setError(true);
     }
-
-    // initial request
-    if (!error && !ended) {
-      requestLectures();
-    }
   }, [id]);
-
-  const requestLectures = async () => {
-    const result = await getLecturesOfInstructor(id, fetchIndex);
-
-    // error process
-    if (!result) {
-      return setEnded(true);
-    }
-
-    const { instructor, ended } = result;
-
-    if (fetchIndex === 0) {
-      setInstructorName(instructor.name);
-      setInstructorId(instructor._id);
-    }
-
-    setLectures((current) => [...current, ...instructor.lectures]);
-    setFetchIndex((current) => current + 1);
-    if (ended) {
-      setEnded(true);
-    }
-  };
-
-  const onIntersect = () => {
-    if (lectures.length > 0 && !ended) {
-      requestLectures();
-    }
-  };
 
   useIntersectionObserver({
     root: null,
     target: target,
-    onIntersect,
+    onIntersect: () => {
+      if (hasNextPage) fetchNextPage();
+    },
   });
 
   return (
@@ -84,13 +75,15 @@ const Topic = () => {
             {divideLectures(lectures).map((lectureChunk, index) => (
               <div
                 key={`lecture_chunk_${index}`}
-                ref={index === 5 * (fetchIndex - 1) + 4 ? setTarget : null}
+                ref={
+                  index === 5 * (data?.pages.length - 1) + 4 ? setTarget : null
+                }
               >
                 <RowSlider lectures={lectureChunk} />
               </div>
             ))}
           </div>
-          {ended ? null : <RowLoading header={true} />}
+          {(hasNextPage || !data) && <RowLoading header={true} />}
         </main>
       )}
       <Footer />
