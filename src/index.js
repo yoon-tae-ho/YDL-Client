@@ -11,7 +11,7 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: Infinity, // 1 minute
       cacheTime: Infinity, // 30 minutes
-      refetchOnMount: true,
+      refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: true,
     },

@@ -22,12 +22,16 @@ export const isMongoRegex = (id) => {
   return regex.test(id);
 };
 
+const getRandom = (max) => Math.floor(Math.random() * max);
+
 // fetch
+
+const BASE_URL = process.env.REACT_APP_API_URL;
 
 export const getFirstVideo = async (lectureId) => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/lectures/${lectureId}/first-video`
+      `${BASE_URL}/lectures/${lectureId}/first-video`
     );
 
     if (response.status === 404) {
@@ -42,15 +46,12 @@ export const getFirstVideo = async (lectureId) => {
 
 export const getLecturesOfTopic = async (topicId, fetchIndex) => {
   try {
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/topics/${topicId}`,
-      {
-        credentials: "include",
-        headers: {
-          fetch_index: fetchIndex,
-        },
-      }
-    );
+    const response = await fetch(`${BASE_URL}/topics/${topicId}`, {
+      credentials: "include",
+      headers: {
+        fetch_index: fetchIndex,
+      },
+    });
 
     let data;
     if (response.status === 200) {
@@ -66,7 +67,7 @@ export const getLecturesOfTopic = async (topicId, fetchIndex) => {
 export const getLecturesOfInstructor = async (instructorId, fetchIndex) => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/topics/instructors/${instructorId}`,
+      `${BASE_URL}/topics/instructors/${instructorId}`,
       {
         headers: {
           fetch_index: fetchIndex,
@@ -86,15 +87,12 @@ export const getLecturesOfInstructor = async (instructorId, fetchIndex) => {
 
 export const searchLectures = async (keyword, excepts) => {
   try {
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/lectures/search/${keyword}`,
-      {
-        credentials: "include",
-        headers: {
-          excepts: JSON.stringify(excepts),
-        },
-      }
-    );
+    const response = await fetch(`${BASE_URL}/lectures/search/${keyword}`, {
+      credentials: "include",
+      headers: {
+        excepts: JSON.stringify(excepts),
+      },
+    });
 
     let data;
     if (response.status === 200) {
@@ -108,7 +106,56 @@ export const searchLectures = async (keyword, excepts) => {
 };
 
 export const getLectureDetail = async (id) => {
-  return await (
-    await fetch(`${process.env.REACT_APP_API_URL}/lectures/${id}`)
-  ).json();
+  return await (await fetch(`${BASE_URL}/lectures/${id}`)).json();
+};
+
+export const browseLectures = async (pageParam, maxIndex, isContainedArr) => {
+  const MAX_BROWSE_TOPICS = maxIndex === 0 ? 40 : Math.min(40, maxIndex);
+  const MAX_TOPIC = 5;
+
+  const isFirstPage = pageParam === 1;
+  const isMax = MAX_BROWSE_TOPICS <= MAX_TOPIC * pageParam;
+  const newIndexesLen = isMax
+    ? MAX_BROWSE_TOPICS - MAX_TOPIC * (pageParam - 1)
+    : MAX_TOPIC;
+  const newIndexes = [];
+  if (!isFirstPage) {
+    // get new topic indexes
+    for (let i = 0; i < newIndexesLen; ++i) {
+      const random = getRandom(maxIndex) + 1;
+      if (isContainedArr[random]) {
+        --i;
+        continue;
+      }
+      newIndexes.push(random);
+      isContainedArr[random] = true;
+    }
+  }
+
+  try {
+    const result = await (
+      await fetch(
+        `${process.env.REACT_APP_API_URL}/topics/${
+          isFirstPage ? "initial" : "browse"
+        }`,
+        {
+          credentials: "include",
+          headers: {
+            new_indexes: JSON.stringify(newIndexes),
+          },
+        }
+      )
+    ).json();
+
+    const { topics, numOfTopics } = result;
+
+    return {
+      result: topics,
+      nextPage: pageParam + 1,
+      isLast: isMax,
+      numOfTopics,
+    };
+  } catch (error) {
+    console.log(error);
+  }
 };
