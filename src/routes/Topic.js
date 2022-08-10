@@ -85,10 +85,16 @@ const Topic = () => {
       process.env.REACT_APP_MY_LIST,
     ];
     const isIncluded = allowedNonRegex.includes(id);
-    if (isIncluded && isFetched) {
-      refetch();
-    }
-  }, [id]);
+
+    // !isInclude라면 아무것도 하지 않음.
+    if (!isIncluded) return;
+
+    // loggedIn 상태가 아니라면 login page로 보냄.
+    if (!loggedIn) return navigate("/login");
+
+    // 이전에 fetch가 이루어졌다면 refetch를 통해 최신의 data를 유지한다.
+    if (isFetched) refetch();
+  }, [id, loggedIn]);
 
   // my-list에서 lecture를 제거했을 때 화면에 바로 적용하기 위한 코드.
   useEffect(() => {
