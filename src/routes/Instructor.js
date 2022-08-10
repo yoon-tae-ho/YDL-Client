@@ -28,25 +28,33 @@ const Topic = () => {
       getNextPageParam: (lastPage, pages) =>
         lastPage.isLast ? undefined : lastPage.nextPage,
       onSuccess: (data) => {
-        if (data.pages[data.pages.length - 1].isError) {
+        const lastPage = data.pages[data.pages.length - 1];
+        if (lastPage.isError) {
           return setError(true);
         }
-
-        // first page
-        if (data.pages.length === 1) {
-          setInstructorName(data.pages[0].result.name);
-        }
-        setLectures((current) => [
-          ...current,
-          ...data.pages[data.pages.length - 1].result.lectures,
-        ]);
       },
       onError: () => setError(true),
     }
   );
 
+  // lectures와 instructorName에 data를 채워넣음.
   useEffect(() => {
-    // id regex validation
+    if (!data) return;
+
+    let newLectures = [];
+    data.pages.forEach((page, i) => {
+      // first page
+      if (i === 0) {
+        setInstructorName(page.result?.name);
+      }
+      if (!!page.result?.lectures)
+        newLectures = [...newLectures, ...page.result.lectures];
+    });
+    setLectures(newLectures);
+  }, [data]);
+
+  // id regex validation
+  useEffect(() => {
     const regex = new RegExp(process.env.REACT_APP_MONGO_REGEX_FORMAT);
     if (!regex.test(id)) {
       setError(true);

@@ -44,21 +44,27 @@ export const getFirstVideo = async (lectureId) => {
   }
 };
 
-export const getLecturesOfTopic = async (topicId, fetchIndex) => {
+export const getLecturesOfTopic = async (topicId, pageParam) => {
   try {
     const response = await fetch(`${BASE_URL}/topics/${topicId}`, {
       credentials: "include",
       headers: {
-        fetch_index: fetchIndex,
+        fetch_index: pageParam - 1,
       },
     });
 
-    let data;
-    if (response.status === 200) {
-      data = await response.json();
+    if (!response.ok) {
+      return { isError: true, status: response.status };
     }
 
-    return { status: response.status, data };
+    const { topic, ended } = await response.json();
+
+    return {
+      result: topic,
+      nextPage: pageParam + 1,
+      isLast: ended,
+      isError: false,
+    };
   } catch (error) {
     console.log(error);
   }
@@ -79,8 +85,7 @@ export const getLecturesOfInstructor = async (instructorId, pageParam) => {
       return { isError: true };
     }
 
-    const data = await response.json();
-    const { instructor, ended } = data;
+    const { instructor, ended } = await response.json();
 
     return {
       result: instructor,

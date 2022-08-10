@@ -1,3 +1,4 @@
+import { useInfiniteQuery } from "@tanstack/react-query";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Footer from "../components/Footer";
@@ -21,80 +22,75 @@ const Topic = () => {
 
   const [lectures, setLectures] = useState([]);
   const [topicName, setTopicName] = useState("");
-  const [topicId, setTopicId] = useState("");
-  const [fetchIndex, setFetchIndex] = useState(0);
   const [error, setError] = useState(null);
-  const [ended, setEnded] = useState(false);
   const [target, setTarget] = useState(null);
 
-  const requestLectures = async (index) => {
-    const { status, data } = await getLecturesOfTopic(id, index);
+  const { fetchNextPage, hasNextPage, data, refetch, isFetched } =
+    useInfiniteQuery(
+      ["lectures", "topic", id, loggedIn],
+      ({ pageParam = 1 }) => getLecturesOfTopic(id, pageParam),
+      {
+        getNextPageParam: (lastPage, pages) =>
+          lastPage.isLast ? undefined : lastPage.nextPage,
+        onSuccess: (data) => {
+          const lastPage = data.pages[data.pages.length - 1];
+          // error process
+          if (lastPage.isError) {
+            switch (lastPage.status) {
+              case 401:
+                return navigate("/login");
 
-    // unAuthorized
-    if (status === 401) {
-      return navigate("/login");
-    }
+              case 404:
+                if (data.pages.length === 1) return setError(true);
+                break;
 
-    // error process
-    if (status === 404) {
-      if (index === 0) {
-        setEnded(true);
-        return setError(true);
-      } else {
-        return setEnded(true);
+              default:
+                return;
+            }
+          }
+        },
+        onError: () => setError(true),
       }
-    }
-
-    const { topic, ended } = data;
-
-    setTopicName(topic.name);
-    setTopicId(topic._id);
-
-    if (ended) {
-      setEnded(true);
-    }
-    return topic.lectures;
-  };
-
-  const onIntersect = () => {
-    if (lectures.length > 0 && !ended) {
-      requestLectures(fetchIndex).then((newLectures) => {
-        setLectures((current) => [...current, ...newLectures]);
-        setFetchIndex((current) => current + 1);
-      });
-    }
-  };
+    );
 
   useIntersectionObserver({
     root: null,
     target: target,
-    onIntersect,
+    onIntersect: () => {
+      if (hasNextPage) fetchNextPage();
+    },
   });
 
+  // lectures와 topicName에 data를 채워넣음.
+  useEffect(() => {
+    if (!data) return;
+
+    let newLectures = [];
+    data.pages.forEach((page, i) => {
+      // first page
+      if (i === 0) {
+        setTopicName(page.result?.name);
+      }
+      if (!!page.result?.lectures)
+        newLectures = [...newLectures, ...page.result.lectures];
+    });
+    setLectures(newLectures);
+  }, [data]);
+
+  // user에 의해 변할 수 있는 my-list와 continue-watching은
+  // 페이지에 들어올 때 refetch를 해줘서 최신의 상태를 유지한다.
   useEffect(() => {
     const allowedNonRegex = [
       process.env.REACT_APP_CONTINUE_WATCHING,
       process.env.REACT_APP_MY_LIST,
     ];
     const isIncluded = allowedNonRegex.includes(id);
-    if (isIncluded && !loggedIn) {
-      return navigate("/login");
+    if (isIncluded && isFetched) {
+      refetch();
     }
+  }, [id]);
 
-    // initial request
-    setError(false);
-    setEnded(false);
-    setFetchIndex(0);
-    setLectures([]);
-    setTopicName("");
-    setTopicId("");
-    setTarget(null);
-    requestLectures(0).then((newLectures) => {
-      setLectures(newLectures);
-      setFetchIndex(1);
-    });
-  }, [id, loggedIn]);
-
+  // my-list에서 lecture를 제거했을 때 화면에 바로 적용하기 위한 코드.
   useEffect(() => {
     if (
       !loggedIn ||
@@ -104,6 +100,7 @@ const Topic = () => {
       return;
     }
 
+    // login 되어있고 my-list 토픽을 선택했고 lectures가 있을 때.
     let i;
     for (i = 0; i < lectures.length; ++i) {
       if (!user.booked.includes(lectures[i]._id)) {
@@ -114,7 +111,7 @@ const Topic = () => {
     if (i < lectures.length) {
       setLectures((current) => current.filter((_, index) => index !== i));
     }
-  }, [id, loggedIn, user?.booked]);
+  }, [id, loggedIn, user?.booked, lectures]);
 
   return (
     <>
@@ -130,13 +127,15 @@ const Topic = () => {
             {divideLectures(lectures).map((lectureChunk, index) => (
               <div
                 key={`lecture_chunk_${index}`}
-                ref={index === 5 * (fetchIndex - 1) + 4 ? setTarget : null}
+                ref={
+                  index === 5 * (data?.pages.length - 1) + 4 ? setTarget : null
+                }
               >
-                <RowSlider lectures={lectureChunk} topicId={topicId} />
+                <RowSlider lectures={lectureChunk} topicId={id} />
               </div>
             ))}
           </div>
-          {!ended && <RowLoading header={true} />}
+          {(hasNextPage || !data) && <RowLoading header={true} />}
         </main>
       )}
       <Footer />
