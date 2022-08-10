@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import styles from "../css/Browse.module.css";
@@ -20,22 +20,24 @@ const Browse = () => {
     {
       getNextPageParam: (lastPage, pages) =>
         lastPage.isLast ? undefined : lastPage.nextPage,
-      onSuccess: (data) => {
-        // first page
-        if (data.pages.length === 1) {
-          setMaxIndex(data.pages[0].numOfTopics);
-          const arr = new Array(data.pages[0].numOfTopics + 1);
-          for (let i = 0; i < data.pages[0].numOfTopics + 1; ++i)
-            arr[i] = false;
-          setIsContainedArr(arr);
-        }
-        const newIsContainedArr = [...isContainedArr];
-        data.pages[data.pages.length - 1].result.forEach(
-          (topic) => (newIsContainedArr[topic.index] = true)
-        );
-      },
     }
   );
+
+  // maxIndex, isContainedArr에 데이터 넣기
+  useEffect(() => {
+    if (!data) return;
+
+    const arr = new Array(data.pages[0].numOfTopics + 1);
+    for (let i = 0; i < data.pages[0].numOfTopics + 1; ++i) arr[i] = false;
+
+    data.pages.forEach((page, i) => {
+      // first page
+      if (i === 0 && !!page.numOfTopics) setMaxIndex(page.numOfTopics);
+      page.result?.forEach((topic) => (arr[topic.index] = true));
+    });
+
+    setIsContainedArr(arr);
+  }, [data]);
 
   useIntersectionObserver({
     root: null,
