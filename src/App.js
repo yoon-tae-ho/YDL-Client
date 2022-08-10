@@ -29,9 +29,10 @@ const App = () => {
 
   useEffect(() => {
     checkUser().then((result) => {
-      if (result) {
-        setUser(result.user);
-        setLoggedIn(result.loggedIn);
+      const { loggedIn, user } = result;
+      if (loggedIn) {
+        setUser(user);
+        setLoggedIn(loggedIn);
       }
     });
   }, []);

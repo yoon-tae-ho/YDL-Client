@@ -17,17 +17,11 @@ export const checkArray = (array, targetId) => {
 
 export const checkUser = async () => {
   try {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/user`, {
-      credentials: "include",
-    });
-
-    if (response.status === 404 || response.status === 401) {
-      return;
-    }
-
-    const loggedIn = true;
-    const user = await response.json();
-    return { loggedIn, user };
+    return await (
+      await fetch(`${process.env.REACT_APP_API_URL}/user`, {
+        credentials: "include",
+      })
+    ).json();
   } catch (error) {
     console.log(error);
   }
