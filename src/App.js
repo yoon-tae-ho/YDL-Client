@@ -1,23 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-
-import Browse from "./routes/Browse";
-import Watch from "./routes/Watch";
-import Lecture from "./routes/Lecture";
-import Topic from "./routes/Topic";
-import Instructor from "./routes/Instructor";
-import Login from "./routes/Login";
-import Logout from "./routes/Logout";
-import Search from "./routes/Search";
-
 import UserContext from "./contexts/UserContext";
 import SearchContext from "./contexts/SearchContext";
 import { checkUser } from "./controllers/userController";
+import Router from "./Router";
 
 const App = () => {
   // UserContext
@@ -66,25 +51,7 @@ const App = () => {
   return (
     <UserContext.Provider value={userValue}>
       <SearchContext.Provider value={searchValue}>
-        <Router>
-          <Routes>
-            {/* /search */}
-            <Route path="/search" element={<Search />} />
-            {/* /browse */}
-            <Route path="/" element={<Navigate replace to="/browse" />} />
-            <Route path="/browse">
-              <Route path="" element={<Browse />} />
-              <Route path=":id" element={<Lecture />} />
-              <Route path="topics/:id" element={<Topic />} />
-              <Route path="instructors/:id" element={<Instructor />} />
-            </Route>
-            {/* /watch */}
-            <Route path="/watch/:id" element={<Watch />} />
-            {/* user */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/logout" element={<Logout />} />
-          </Routes>
-        </Router>
+        <Router />
       </SearchContext.Provider>
     </UserContext.Provider>
   );
