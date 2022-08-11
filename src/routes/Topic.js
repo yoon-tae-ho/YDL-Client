@@ -14,6 +14,11 @@ import {
 import styles from "../css/Topic.module.css";
 import { useIntersectionObserver } from "../hooks";
 
+const allowedNonRegex = [
+  process.env.REACT_APP_CONTINUE_WATCHING,
+  process.env.REACT_APP_MY_LIST,
+];
+
 const Topic = () => {
   const { loggedIn, user } = useContext(UserContext);
   const { id } = useParams();
@@ -24,33 +29,36 @@ const Topic = () => {
   const [error, setError] = useState(null);
   const [target, setTarget] = useState(null);
 
-  const { fetchNextPage, hasNextPage, data, refetch, isFetched } =
-    useInfiniteQuery(
-      ["lectures", "topic", id, loggedIn],
-      ({ pageParam = 1 }) => getLecturesOfTopic(id, pageParam),
-      {
-        getNextPageParam: (lastPage, pages) =>
-          lastPage.isLast ? undefined : lastPage.nextPage,
-        onSuccess: (data) => {
-          const lastPage = data.pages[data.pages.length - 1];
-          // error process
-          if (lastPage.isError) {
-            switch (lastPage.status) {
-              case 401:
-                return navigate("/login");
+  const { fetchNextPage, hasNextPage, data } = useInfiniteQuery(
+    ["lectures", "topic", id, loggedIn],
+    ({ pageParam = 1 }) => getLecturesOfTopic(id, pageParam),
+    {
+      getNextPageParam: (lastPage, pages) =>
+        lastPage.isLast ? undefined : lastPage.nextPage,
+      onSuccess: (data) => {
+        const lastPage = data.pages[data.pages.length - 1];
+        // error process
+        if (lastPage.isError) {
+          switch (lastPage.status) {
+            case 401:
+              return navigate("/login");
 
-              case 404:
-                if (data.pages.length === 1) return setError(true);
-                break;
+            case 404:
+              if (data.pages.length === 1) return setError(true);
+              break;
 
-              default:
-                return;
-            }
+            default:
+              return;
           }
-        },
-        onError: () => setError(true),
-      }
-    );
+        }
+      },
+      onError: () => setError(true),
+      // user에 의해 변할 수 있는 my-list와 continue-watching은
+      // 페이지에 들어올 때 refetch를 해줘서 최신의 상태를 유지한다.
+      staleTime: allowedNonRegex.includes(id) ? 0 : Infinity,
+      refetchOnMount: allowedNonRegex.includes(id) ? true : false,
+    }
+  );
 
   useIntersectionObserver({
     root: null,
@@ -76,23 +84,10 @@ const Topic = () => {
     setLectures(newLectures);
   }, [data]);
 
-  // user에 의해 변할 수 있는 my-list와 continue-watching은
-  // 페이지에 들어올 때 refetch를 해줘서 최신의 상태를 유지한다.
+  // user data가 필요한 경우에 loggedIn 상태가 아니라면 login page로 보냄.
   useEffect(() => {
-    const allowedNonRegex = [
-      process.env.REACT_APP_CONTINUE_WATCHING,
-      process.env.REACT_APP_MY_LIST,
-    ];
     const isIncluded = allowedNonRegex.includes(id);
-
-    // !isInclude라면 아무것도 하지 않음.
-    if (!isIncluded) return;
-
-    // loggedIn 상태가 아니라면 login page로 보냄.
-    if (!loggedIn) return navigate("/login");
-
-    // 이전에 fetch가 이루어졌다면 refetch를 통해 최신의 data를 유지한다.
-    if (isFetched) refetch();
+    if (isIncluded && !loggedIn) return navigate("/login");
   }, [id, loggedIn]);
 
   // my-list에서 lecture를 제거했을 때 화면에 바로 적용하기 위한 코드.

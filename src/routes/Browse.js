@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import styles from "../css/Browse.module.css";
@@ -7,20 +7,36 @@ import RowLoading from "../components/RowLoading";
 import { useIntersectionObserver } from "../hooks";
 import Footer from "../components/Footer";
 import { browseLectures } from "../controllers/lectureController";
+import UserContext from "../contexts/UserContext";
 
 const Browse = () => {
+  const { user } = useContext(UserContext);
   const [target, setTarget] = useState(null);
   const [maxIndex, setMaxIndex] = useState(0);
   const [isContainedArr, setIsContainedArr] = useState([]);
 
   const { fetchNextPage, hasNextPage, data } = useInfiniteQuery(
-    ["browse"],
+    [
+      "browse",
+      // 시청중인 강의 목록을 최신 상태로 유지하기 위함.
+      user?.viewed?.[0]?.lectureId,
+      user?.viewed?.[0]?.videos?.[0]?.videoId,
+      user?.viewed?.[0]?.videos?.[0]?.time,
+    ],
     ({ pageParam = 1 }) => browseLectures(pageParam, maxIndex, isContainedArr),
     {
       getNextPageParam: (lastPage, pages) =>
         lastPage.isLast ? undefined : lastPage.nextPage,
     }
   );
+
+  useIntersectionObserver({
+    root: null,
+    target: target,
+    onIntersect: () => {
+      if (hasNextPage) fetchNextPage();
+    },
+  });
 
   // maxIndex, isContainedArr에 데이터 넣기
   useEffect(() => {
@@ -37,14 +53,6 @@ const Browse = () => {
 
     setIsContainedArr(arr);
   }, [data]);
-
-  useIntersectionObserver({
-    root: null,
-    target: target,
-    onIntersect: () => {
-      if (hasNextPage) fetchNextPage();
-    },
-  });
 
   return (
     <>

@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { BrowserRouter } from "react-router-dom";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import UserContext from "./contexts/UserContext";
 import SearchContext from "./contexts/SearchContext";
 import { checkUser } from "./controllers/userController";
@@ -51,14 +52,17 @@ const App = () => {
   );
 
   return (
-    <UserContext.Provider value={userValue}>
-      <SearchContext.Provider value={searchValue}>
-        <BrowserRouter>
-          <Header />
-          <Router />
-        </BrowserRouter>
-      </SearchContext.Provider>
-    </UserContext.Provider>
+    <>
+      <UserContext.Provider value={userValue}>
+        <SearchContext.Provider value={searchValue}>
+          <BrowserRouter>
+            <Header />
+            <Router />
+          </BrowserRouter>
+        </SearchContext.Provider>
+      </UserContext.Provider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </>
   );
 };
 
