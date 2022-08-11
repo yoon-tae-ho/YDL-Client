@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import Header from "../components/Header";
 import SearchContext from "../contexts/SearchContext";
 import NotFound from "../components/NotFound";
 import RowSlider from "../components/RowSlider";
@@ -106,7 +105,6 @@ const Search = () => {
 
   return (
     <>
-      <Header />
       <header className={styles.header}>
         <small className={styles.header_text}>다음과 관련된 강의: </small>
         <h1 className={styles.title}>{text}</h1>

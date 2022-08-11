@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { BrowserRouter } from "react-router-dom";
 import UserContext from "./contexts/UserContext";
 import SearchContext from "./contexts/SearchContext";
 import { checkUser } from "./controllers/userController";
 import Router from "./Router";
+import Header from "./components/Header";
 
 const App = () => {
   // UserContext
@@ -51,7 +53,10 @@ const App = () => {
   return (
     <UserContext.Provider value={userValue}>
       <SearchContext.Provider value={searchValue}>
-        <Router />
+        <BrowserRouter>
+          <Header />
+          <Router />
+        </BrowserRouter>
       </SearchContext.Provider>
     </UserContext.Provider>
   );

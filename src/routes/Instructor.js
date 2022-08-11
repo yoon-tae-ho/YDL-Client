@@ -1,9 +1,8 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Footer from "../components/Footer";
 
-import Header from "../components/Header";
+import Footer from "../components/Footer";
 import NotFound from "../components/NotFound";
 import RowLoading from "../components/RowLoading";
 import RowSlider from "../components/RowSlider";
@@ -71,7 +70,6 @@ const Topic = () => {
 
   return (
     <>
-      <Header />
       <header className={styles.header}>
         <h1 className={styles.title}>{instructorName}</h1>
       </header>

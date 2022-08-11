@@ -13,6 +13,7 @@
 .lecture_container {
   width: 850px;
   margin: 2em auto;
+  margin-top: 85px;
   background-color: var(--netflix-darkgray);
   border-radius: 6px;
   box-shadow: var(--apple-box-shadow);

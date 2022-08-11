@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from "react";
 
-import Header from "../components/Header";
 import styles from "../css/Login.module.css";
 import Google from "../images/google_logo.svg";
 import Kakao from "../images/kakao_logo.svg";
@@ -22,7 +21,6 @@ const Login = () => {
 
   return (
     <>
-      <Header />
       <div className={styles.background}>
         <main className={styles.socials}>
           <div className={`${styles.social} ${styles.social_google}`}>

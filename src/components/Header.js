@@ -70,6 +70,8 @@ const Header = () => {
   const onRefreshClick = () => {
     setText("");
     navigate(-1, { replace: true });
+    inputRef.current.value = "";
+    focusInput(inputRef.current);
   };
 
   useEffect(() => {
@@ -134,7 +136,7 @@ const Header = () => {
                   className={styles.search_input}
                   placeholder="제목, 사람, 토픽"
                   maxLength="80"
-                  value={text}
+                  // value={text} // 한글 자음 모음 분리 현상 방지
                   onInput={onSearchInput}
                   onBlur={onSearchBlur}
                 />

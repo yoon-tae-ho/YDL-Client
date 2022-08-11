@@ -4,7 +4,6 @@ import YouTube from "react-youtube";
 import { useQuery } from "@tanstack/react-query";
 
 import styles from "../css/Watch.module.css";
-import Header from "../components/Header";
 import NotFound from "../components/NotFound";
 import UserContext from "../contexts/UserContext";
 import { getVideoInfo, putView } from "../controllers/userController";
@@ -148,7 +147,6 @@ const Watch = () => {
 
   return (
     <>
-      <Header />
       {error ? (
         <NotFound />
       ) : (

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import styles from "../css/Browse.module.css";
-import Header from "../components/Header";
 import RowSlider from "../components/RowSlider";
 import RowLoading from "../components/RowLoading";
 import { useIntersectionObserver } from "../hooks";
@@ -49,7 +48,6 @@ const Browse = () => {
 
   return (
     <>
-      <Header />
       <main className={styles.browseMain}>
         <div className={styles.sliders}>
           {!!data &&
