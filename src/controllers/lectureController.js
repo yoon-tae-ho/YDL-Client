@@ -98,7 +98,7 @@ export const getLecturesOfInstructor = async (instructorId, pageParam) => {
   }
 };
 
-export const searchLectures = async (keyword, excepts) => {
+export const searchLectures = async (keyword, excepts, pageParam) => {
   try {
     const response = await fetch(`${BASE_URL}/lectures/search/${keyword}`, {
       credentials: "include",
@@ -107,19 +107,31 @@ export const searchLectures = async (keyword, excepts) => {
       },
     });
 
-    let data;
-    if (response.status === 200) {
-      data = await response.json();
+    if (!response.ok) {
+      return { isError: true };
     }
 
-    return { status: response.status, data };
+    const { lectures, ended } = await response.json();
+
+    return {
+      result: lectures,
+      nextPage: pageParam + 1,
+      isLast: ended,
+      isError: false,
+    };
   } catch (error) {
     console.log(error);
   }
 };
 
 export const getLectureDetail = async (id) => {
-  return await (await fetch(`${BASE_URL}/lectures/${id}`)).json();
+  const response = await fetch(`${BASE_URL}/lectures/${id}`);
+
+  if (!response.ok) return { isError: true };
+
+  const data = await response.json();
+
+  return { isError: false, lecture: data };
 };
 
 export const browseLectures = async (pageParam, maxIndex, isContainedArr) => {

@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 import SearchContext from "../contexts/SearchContext";
 import NotFound from "../components/NotFound";
@@ -17,87 +18,58 @@ const Search = () => {
   const [searchParams, _] = useSearchParams();
 
   const [lectures, setLectures] = useState([]);
-  const [fetchIndex, setFetchIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [ended, setEnded] = useState(false);
   const [target, setTarget] = useState(null);
 
-  const requestLectures = async (keyword, index) => {
-    if (!keyword) {
-      return;
+  const { fetchNextPage, hasNextPage, data } = useInfiniteQuery(
+    ["lectures", "search", text],
+    ({ pageParam = 1 }) =>
+      searchLectures(
+        text,
+        lectures.map((lecture) => lecture._id),
+        pageParam
+      ),
+    {
+      getNextPageParam: (lastPage, pages) =>
+        lastPage.isLast ? undefined : lastPage.nextPage,
+      onSuccess: (data) => {
+        if (data.isError) setError(true);
+      },
+      onError: () => setError(true),
     }
-
-    setLoading(true);
-
-    let excepts = [];
-    if (index !== 0) {
-      excepts = lectures.map((lecture) => lecture._id);
-    }
-
-    const { status, data } = await searchLectures(keyword, excepts);
-
-    // bad request (keyword === "")
-    if (status === 400) {
-      return setLoading(false);
-    }
-
-    // error process
-    if (status === 404) {
-      setEnded(true);
-      setLoading(false);
-      if (index === 0) {
-        return setError(true);
-      }
-    }
-
-    if (data.ended) {
-      setEnded(true);
-    }
-    setLoading(false);
-    setError(false);
-    return data.lectures;
-  };
-
-  const onIntersect = () => {
-    if (lectures.length > 0 && !ended) {
-      requestLectures(text, fetchIndex).then((newLectures) => {
-        if (newLectures) {
-          setLectures((current) => [...current, ...newLectures]);
-          setFetchIndex((current) => current + 1);
-        }
-      });
-    }
-  };
+  );
 
   useIntersectionObserver({
     root: null,
     target: target,
-    onIntersect,
+    onIntersect: () => {
+      if (hasNextPage) fetchNextPage();
+    },
   });
 
+  // search param이 바뀌어도 search page에서 벗어나지 않기 때문에
+  // state들이 초기화되지 않음. 따라서 state initialize가 필요함.
   useEffect(() => {
     const keyword = searchParams.get("q");
 
-    setIsSearching(true);
-    setText(keyword);
-
-    // state initilize
     setLectures([]);
-    setFetchIndex(0);
-    setLoading(true);
     setError(null);
-    setEnded(false);
     setTarget(null);
 
-    // initial request
-    requestLectures(keyword, 0).then((newLectures) => {
-      if (newLectures) {
-        setLectures(newLectures);
-        setFetchIndex(1);
-      }
-    });
+    setIsSearching(true);
+    setText(keyword);
   }, [searchParams]);
+
+  // lectures에 data를 채워넣음.
+  useEffect(() => {
+    if (!data) return;
+
+    let newLectures = [];
+    data.pages.forEach((page, i) => {
+      if (!!page.result) newLectures = [...newLectures, ...page.result];
+    });
+    setLectures(newLectures);
+  }, [data]);
 
   return (
     <>
@@ -106,14 +78,16 @@ const Search = () => {
         <h1 className={styles.title}>{text}</h1>
       </header>
       <main className={styles.main}>
-        {error ? (
+        {error || (!hasNextPage && lectures.length === 0) ? (
           <NotFound />
         ) : (
           <div className={styles.sliders}>
             {divideLectures(lectures).map((lectureChunk, index) => (
               <div
                 key={`lecture_chunk_${index}`}
-                ref={index === 5 * (fetchIndex - 1) + 4 ? setTarget : null}
+                ref={
+                  index === 5 * (data?.pages?.length - 1) + 4 ? setTarget : null
+                }
               >
                 <RowSlider lectures={lectureChunk} />
               </div>
@@ -121,7 +95,7 @@ const Search = () => {
           </div>
         )}
       </main>
-      {!loading && <Footer />}
+      <Footer />
     </>
   );
 };

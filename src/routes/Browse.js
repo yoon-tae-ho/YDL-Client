@@ -64,8 +64,8 @@ const Browse = () => {
                 <div
                   key={topic._id}
                   ref={
-                    i === data.pages.length - 1
-                      ? j === page.result.length - 2
+                    i === data?.pages?.length - 1
+                      ? j === page?.result?.length - 2
                         ? setTarget
                         : undefined
                       : undefined

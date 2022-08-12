@@ -51,16 +51,16 @@ const getVideoSelectors = (videos, isExpanded, lectureId) => {
 const Lecture = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [lecture, setLecture] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const [clamped, setClamped] = useState(true);
 
-  const { isLoading: loading, data: lecture } = useQuery(
-    ["lectureDetail", id],
-    () => getLectureDetail(id),
-    {
-      onError: () => processError(),
-    }
-  );
+  const { data } = useQuery(["lectureDetail", id], () => getLectureDetail(id), {
+    onSuccess: (data) => {
+      if (data.isError) processError();
+    },
+    onError: () => processError(),
+  });
 
   const processError = () => {
     navigate("/", { replace: true });
@@ -74,11 +74,16 @@ const Lecture = () => {
     }
   }, [id]);
 
+  // lecture에 data를 채워넣음.
+  useEffect(() => {
+    if (!!data && !data.isError) setLecture(data.lecture);
+  }, [data]);
+
   const onDivideBtnClick = () => setExpanded((current) => !current);
 
   return (
     <div>
-      {loading ? (
+      {!lecture ? (
         <VideoLoading />
       ) : (
         <div className={styles.lecture_container}>

@@ -73,7 +73,7 @@ const Topic = () => {
       <header className={styles.header}>
         <h1 className={styles.title}>{instructorName}</h1>
       </header>
-      {error ? (
+      {error || (!hasNextPage && lectures.length === 0) ? (
         <NotFound />
       ) : (
         <main className={styles.main}>
@@ -82,7 +82,7 @@ const Topic = () => {
               <div
                 key={`lecture_chunk_${index}`}
                 ref={
-                  index === 5 * (data?.pages.length - 1) + 4 ? setTarget : null
+                  index === 5 * (data?.pages?.length - 1) + 4 ? setTarget : null
                 }
               >
                 <RowSlider lectures={lectureChunk} />
