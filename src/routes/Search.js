@@ -12,6 +12,7 @@ import {
 import styles from "../css/Search.module.css";
 import { useIntersectionObserver } from "../hooks";
 import Footer from "../components/Footer";
+import CircleLoading from "../components/CircleLoading";
 
 const Search = () => {
   const { setIsSearching, text, setText } = useContext(SearchContext);
@@ -33,7 +34,10 @@ const Search = () => {
       getNextPageParam: (lastPage, pages) =>
         lastPage.isLast ? undefined : lastPage.nextPage,
       onSuccess: (data) => {
-        if (data.isError) setError(true);
+        const lastPage = data.pages[data.pages.length - 1];
+        if (lastPage.isError) {
+          return setError(true);
+        }
       },
       onError: () => setError(true),
     }
@@ -78,7 +82,7 @@ const Search = () => {
         <h1 className={styles.title}>{text}</h1>
       </header>
       <main className={styles.main}>
-        {error || (!hasNextPage && lectures.length === 0) ? (
+        {error || (!!data && !hasNextPage && lectures.length === 0) ? (
           <NotFound />
         ) : (
           <div className={styles.sliders}>
@@ -92,6 +96,7 @@ const Search = () => {
                 <RowSlider lectures={lectureChunk} />
               </div>
             ))}
+            {(hasNextPage || !data) && <CircleLoading />}
           </div>
         )}
       </main>

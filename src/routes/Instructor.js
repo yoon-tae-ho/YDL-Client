@@ -73,7 +73,7 @@ const Topic = () => {
       <header className={styles.header}>
         <h1 className={styles.title}>{instructorName}</h1>
       </header>
-      {error || (!hasNextPage && lectures.length === 0) ? (
+      {error ? (
         <NotFound />
       ) : (
         <main className={styles.main}>

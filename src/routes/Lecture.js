@@ -10,7 +10,7 @@ import LikeButton from "../components/buttons/LikeButton";
 import HateButton from "../components/buttons/HateButton";
 import MoreButton from "../components/buttons/MoreButton";
 import VideoSelector from "../components/VideoSelector";
-import VideoLoading from "../components/VideoLoading";
+import CircleLoading from "../components/CircleLoading";
 import { getLectureDetail } from "../controllers/lectureController";
 
 const getTags = (type, tags, limit = tags.length) => {
@@ -84,7 +84,7 @@ const Lecture = () => {
   return (
     <div>
       {!lecture ? (
-        <VideoLoading />
+        <CircleLoading />
       ) : (
         <div className={styles.lecture_container}>
           <img
