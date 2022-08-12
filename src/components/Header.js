@@ -89,6 +89,7 @@ const Header = () => {
 
   useEffect(() => {
     if (isSearching) {
+      inputRef.current.value = text;
       focusInput(inputRef.current);
     }
   }, [isSearching]);

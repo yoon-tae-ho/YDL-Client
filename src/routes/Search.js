@@ -13,8 +13,7 @@ import { useIntersectionObserver } from "../hooks";
 import Footer from "../components/Footer";
 
 const Search = () => {
-  const { isSearching, setIsSearching, text, setText } =
-    useContext(SearchContext);
+  const { setIsSearching, text, setText } = useContext(SearchContext);
   const [searchParams, _] = useSearchParams();
 
   const [lectures, setLectures] = useState([]);
@@ -80,10 +79,7 @@ const Search = () => {
   useEffect(() => {
     const keyword = searchParams.get("q");
 
-    // set SearchContext
-    if (!isSearching) {
-      setIsSearching(true);
-    }
+    setIsSearching(true);
     setText(keyword);
 
     // state initilize
@@ -109,10 +105,10 @@ const Search = () => {
         <small className={styles.header_text}>다음과 관련된 강의: </small>
         <h1 className={styles.title}>{text}</h1>
       </header>
-      {error ? (
-        <NotFound />
-      ) : (
-        <main className={styles.main}>
+      <main className={styles.main}>
+        {error ? (
+          <NotFound />
+        ) : (
           <div className={styles.sliders}>
             {divideLectures(lectures).map((lectureChunk, index) => (
               <div
@@ -123,8 +119,8 @@ const Search = () => {
               </div>
             ))}
           </div>
-        </main>
-      )}
+        )}
+      </main>
       {!loading && <Footer />}
     </>
   );

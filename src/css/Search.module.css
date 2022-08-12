@@ -18,3 +18,7 @@
   margin-right: 5px;
   white-space: nowrap;
 }
+
+.main {
+  min-height: 100vh;
+}
