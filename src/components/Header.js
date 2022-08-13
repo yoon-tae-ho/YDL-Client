@@ -113,6 +113,11 @@ const Header = () => {
               내가 찜한 강의
             </Link>
           </li>
+          <li>
+            <Link to="/browse/topics" onClick={stopSearching}>
+              카테고리
+            </Link>
+          </li>
         </ul>
       </div>
       <div className={styles.secondary_navigation}>

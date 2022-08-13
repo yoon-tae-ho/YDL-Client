@@ -184,3 +184,9 @@ export const browseLectures = async (pageParam, maxIndex, isContainedArr) => {
     console.log(error);
   }
 };
+
+export const getTopicCategory = async () => {
+  return await (
+    await fetch(`${process.env.REACT_APP_API_URL}/topics/category`)
+  ).json();
+};
