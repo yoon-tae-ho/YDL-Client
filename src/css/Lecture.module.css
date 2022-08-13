@@ -1,3 +1,9 @@
+.loading_background {
+  width: 100vw;
+  height: 100vh;
+  background-color: transparent;
+}
+
 .background {
   position: fixed;
   top: 0;

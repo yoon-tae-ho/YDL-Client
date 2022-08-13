@@ -7,7 +7,7 @@ import styles from "../css/Watch.module.css";
 import NotFound from "../components/NotFound";
 import UserContext from "../contexts/UserContext";
 import { getVideoInfo, putView } from "../controllers/userController";
-import VideoLoading from "../components/VideoLoading";
+import CircleLoading from "../components/CircleLoading";
 
 const putRequest = async (id, target, setUser, setError) => {
   const duration = Math.floor(target.getDuration());
@@ -152,7 +152,7 @@ const Watch = () => {
       ) : (
         <main className={styles.main}>
           {loading ? (
-            <VideoLoading />
+            <CircleLoading />
           ) : player === process.env.REACT_APP_YOUTUBE_PLAYER ? (
             <YouTube
               id="player"

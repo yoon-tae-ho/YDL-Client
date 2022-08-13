@@ -9,8 +9,8 @@
 
 .wrapper {
   background: transparent;
-  min-height: 300px;
-  color: white;
+  min-height: 100px;
+  color: var(--netflix-red);
   text-align: center;
   display: table;
   width: 100%;
@@ -30,9 +30,9 @@
   animation: loadinganim 1s infinite;
   animation-timing-function: linear;
   animation-direction: reverse;
-  width: 50px;
-  height: 50px;
-  background: white;
+  width: 43px;
+  height: 43px;
+  background: var(--netflix-red);
   border-radius: 50%;
   margin: 0 auto;
 }
@@ -63,7 +63,7 @@
   top: -32px;
   width: 8px;
   height: 8px;
-  background: white;
+  background: var(--netflix-red);
   border-radius: 50%;
 }
 

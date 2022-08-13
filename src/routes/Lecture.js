@@ -84,7 +84,9 @@ const Lecture = () => {
   return (
     <div>
       {!lecture ? (
-        <CircleLoading />
+        <div className={styles.loading_background}>
+          <CircleLoading />
+        </div>
       ) : (
         <div className={styles.lecture_container}>
           <img
