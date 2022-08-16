@@ -117,6 +117,16 @@ const Preview = ({
     }
   };
 
+  const showProgressBar = () => {
+    const aView = user.viewed.find((aView) => aView.lectureId === id);
+    if (aView) {
+      const { time, duration } = aView.videos[0];
+      setVideoInfo(aView.videos[0]);
+      setProgress((time / duration) * 100);
+      setIsContinueWatching(true);
+    }
+  };
+
   // clear timeout
   useEffect(() => {
     return onMouseLeave;
@@ -125,18 +135,23 @@ const Preview = ({
   // makes belonged content's z-index bigger.
   useEffect(() => setPreviewHovered(hovered), [setPreviewHovered, hovered]);
 
-  // get progress
+  // show progress bar
   useEffect(() => {
-    if (loggedIn && sliderTopic === process.env.REACT_APP_CONTINUE_WATCHING) {
-      const aView = user.viewed.find((aView) => aView.lectureId === id);
-      if (aView) {
-        const { time, duration } = aView.videos[0];
-        setVideoInfo(aView.videos[0]);
-        setProgress((time / duration) * 100);
-        setIsContinueWatching(true);
+    if (!loggedIn) return;
+
+    if (sliderTopic === process.env.REACT_APP_CONTINUE_WATCHING) {
+      // show progress bar in continue-watching slider always.
+      showProgressBar();
+    } else {
+      // show progress bar in non-continue-watching slider only when it is hovered.
+      if (hovered) {
+        showProgressBar();
+        return () => setIsContinueWatching(false);
       }
     }
-  }, [loggedIn, id, user?.viewed, sliderTopic]);
+  }, [loggedIn, sliderTopic, hovered]);
+
+  useEffect(() => {}, []);
 
   return (
     <div className={`${className}`}>
