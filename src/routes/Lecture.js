@@ -119,18 +119,20 @@ const Lecture = () => {
             <div className={styles.lecture_metadata}>
               <div className={styles.metadata_left}>
                 <h1 className={styles.lecture_title}>{lecture.title}</h1>
-                <div className={styles.lecture_synopsis}>
-                  <p
-                    className={`${styles.lecture_description}${
-                      clamped ? ` ${styles.clamped}` : ""
-                    }`}
-                  >
-                    {lecture.description}
-                  </p>
-                  <MoreButton
-                    clickHandler={() => setClamped((current) => !current)}
-                  />
-                </div>
+                {lecture.description !== "" && (
+                  <div className={styles.lecture_synopsis}>
+                    <p
+                      className={`${styles.lecture_description}${
+                        clamped ? ` ${styles.clamped}` : ""
+                      }`}
+                    >
+                      {lecture.description}
+                    </p>
+                    <MoreButton
+                      clickHandler={() => setClamped((current) => !current)}
+                    />
+                  </div>
+                )}
               </div>
               <div className={styles.metadata_right}>
                 <div className={styles.tag}>

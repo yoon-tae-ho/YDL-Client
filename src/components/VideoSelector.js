@@ -66,7 +66,7 @@ const VideoSelector = ({ lectureId, video, index, path }) => {
             <span className={styles.video_title}>{video.title}</span>
             <span className={styles.video_duration}></span>
           </div>
-          {video.description && (
+          {video.description !== "" && (
             <div className={styles.video_synopsis}>
               <p
                 className={`${styles.video_description}${
