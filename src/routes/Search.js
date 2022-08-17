@@ -59,6 +59,7 @@ const Search = () => {
     setLectures([]);
     setError(null);
     setTarget(null);
+    window.scroll(0, 0);
 
     setIsSearching(true);
     setText(keyword);
