@@ -14,7 +14,7 @@ const Header = () => {
   const { isSearching, setIsSearching, text, setText, stopSearching } =
     useContext(SearchContext);
   const { loggedIn, user } = useContext(UserContext);
-  const [scroll, setScroll] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [userHovered, setUserHovered] = useState(false);
   const [userTimeoutId, setUserTimeoutId] = useState("");
 
@@ -77,15 +77,11 @@ const Header = () => {
   useEffect(() => {
     const handleScroll = () => {
       const y = window.scrollY;
-      if (y === 0) {
-        setScroll(0);
-      } else if (scroll === 0) {
-        setScroll(y);
-      }
+      setIsScrolled(y > 0);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [scroll]);
+  }, []);
 
   useEffect(() => {
     if (isSearching) {
@@ -96,7 +92,7 @@ const Header = () => {
 
   return (
     <header
-      className={`${styles.header} ${scroll === 0 ? styles.transparent : null}`}
+      className={`${styles.header} ${!isScrolled ? styles.transparent : ""}`}
     >
       <div className={styles.header_column}>
         <Link to="/browse" className={styles.logo} onClick={stopSearching}>
