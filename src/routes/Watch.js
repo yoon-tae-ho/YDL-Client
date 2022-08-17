@@ -8,6 +8,7 @@ import UserContext from "../contexts/UserContext";
 import { getVideoInfo, putView } from "../controllers/userController";
 import CircleLoading from "../components/CircleLoading";
 import YoutubePlayer from "../components/YoutubePlayer";
+import YalePlayer from "../components/YalePlayer";
 
 const INTERVAL_TIME = 5000; // 몇 초에 한 번씩 putViewed를 호출하는지.
 
@@ -48,18 +49,29 @@ const Watch = () => {
       wrapperClass: styles.videoFrame,
       loggedIn,
       INTERVAL_TIME,
+      viewedTime,
       putViewed,
     };
 
     switch (player) {
       case process.env.REACT_APP_YOUTUBE_PLAYER:
-        return (
-          <YoutubePlayer
-            {...commonProps}
-            embededCode={data.videoObj?.embededCode}
-            time={viewedTime}
-          />
-        );
+        const youtubeProps = {
+          ...commonProps,
+          embededCode: data.videoObj?.embededCode,
+        };
+        return <YoutubePlayer {...youtubeProps} />;
+
+      case process.env.REACT_APP_YALE_PLAYER:
+        const yaleProps = {
+          ...commonProps,
+          videoSrc: data.videoObj?.videoSrc,
+          videoType: data.videoObj?.videoType,
+          trackSrc: data.videoObj?.trackSrc,
+          trackKind: data.videoObj?.trackKind,
+          trackSrclang: data.videoObj?.trackSrclang,
+          thumbnailUrl: data.videoObj?.thumbnailUrl,
+        };
+        return <YalePlayer {...yaleProps} />;
 
       default:
         return null;
@@ -68,7 +80,7 @@ const Watch = () => {
 
   // 시청 기록이 있다면 time을 가져옴.
   useEffect(() => {
-    if (!loggedIn) return;
+    if (!loggedIn) return setViewedLoading(false);
 
     let index;
     let aView;
