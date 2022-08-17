@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import YouTube from "react-youtube";
 import { useQuery } from "@tanstack/react-query";
 
 import styles from "../css/Watch.module.css";
@@ -8,141 +7,83 @@ import NotFound from "../components/NotFound";
 import UserContext from "../contexts/UserContext";
 import { getVideoInfo, putView } from "../controllers/userController";
 import CircleLoading from "../components/CircleLoading";
+import YoutubePlayer from "../components/YoutubePlayer";
 
-const putRequest = async (id, target, setUser, setError) => {
-  const duration = Math.floor(target.getDuration());
-  const time = Math.floor(target.getCurrentTime());
-  const { status, newViewed } = await putView(id, time, duration);
-  if (status === 404) {
-    return setError(true);
-  }
-  setUser((user) => ({ ...user, viewed: newViewed }));
-};
+const INTERVAL_TIME = 5000; // 몇 초에 한 번씩 putViewed를 호출하는지.
 
 const Watch = () => {
   const { loggedIn, user, setUser } = useContext(UserContext);
   const { id } = useParams();
 
-  const [loading, setLoading] = useState(true);
+  const [viewedLoading, setViewedLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [isViewExist, setIsViewExist] = useState(true);
+  const [viewedTime, setViewedTime] = useState(0);
 
-  const [src, setSrc] = useState("");
-  const [allow, setAllow] = useState(
-    "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+  const { isLoading: queryLoading, data } = useQuery(
+    ["watching", id],
+    () => getVideoInfo(id),
+    {
+      onSuccess: (data) => {
+        const { isError } = data;
+        if (isError) {
+          return setError(true);
+        }
+      },
+    }
   );
-  const [player, setPlayer] = useState("");
 
-  useQuery(["watching", id], () => getVideoInfo(id), {
-    enabled: !isViewExist,
-    onSuccess: (data) => {
-      const {
-        status,
-        data: { embededCode, player },
-      } = data;
-      if (status === 404) {
-        return setError(true);
-      }
-      setIframe(embededCode, player);
-      setLoading(false);
-    },
-  });
+  const isLoading = viewedLoading || queryLoading;
 
-  // Youtube Only
-  const [code, setCode] = useState("");
-  const [opts, setOpts] = useState({});
-  const [intervalId, setIntervalId] = useState("");
-
-  const onYoutubeReady = (event) => {
-    if (loggedIn) {
-      putRequest(id, event.target, setUser, setError);
+  const putViewed = async (time = 0, duration = 0) => {
+    if (!loggedIn) return;
+    const { status, newViewed } = await putView(id, time, duration);
+    if (status === 404) {
+      return setError(true);
     }
+    setUser((user) => ({ ...user, viewed: newViewed }));
   };
 
-  const onYoutubePlay = (event) => {
-    if (!loggedIn) {
-      return;
-    }
+  const getVideoPlayer = (player) => {
+    const commonProps = {
+      wrapperClass: styles.videoFrame,
+      loggedIn,
+      INTERVAL_TIME,
+      putViewed,
+    };
 
-    if (!intervalId) {
-      const tempId = setInterval(() => {
-        putRequest(id, event.target, setUser, setError);
-      }, 5000);
-      setIntervalId(tempId);
-    }
-  };
-
-  const onYoutubePause = (event) => {
-    if (!loggedIn) {
-      return;
-    }
-
-    putRequest(id, event.target, setUser, setError);
-
-    if (intervalId) {
-      clearInterval(intervalId);
-      setIntervalId("");
-    }
-  };
-
-  const onYoutubeEnd = (event) => {};
-
-  const setIframe = (code, player, time = 0) => {
     switch (player) {
       case process.env.REACT_APP_YOUTUBE_PLAYER:
-        setOpts({
-          width: "100%",
-          height: "100%",
-          playerVars: {
-            // https://developers.google.com/youtube/player_parameters
-            start: time,
-            autoplay: 1,
-            controls: 1,
-            enablejsapi: 1,
-            origin: window.location.origin,
-            rel: 1,
-          },
-        });
-        setCode(code);
-        break;
+        return (
+          <YoutubePlayer
+            {...commonProps}
+            embededCode={data.videoObj?.embededCode}
+            time={viewedTime}
+          />
+        );
 
       default:
-        break;
+        return null;
     }
-    setPlayer(player);
   };
 
-  // clear interval
+  // 시청 기록이 있다면 time을 가져옴.
   useEffect(() => {
-    return () => {
-      if (intervalId) {
-        clearTimeout(intervalId);
-        setIntervalId("");
-      }
-    };
-  }, [intervalId]);
+    if (!loggedIn) return;
 
-  // initial setting
-  useEffect(() => {
     let index;
     let aView;
-    if (loggedIn) {
-      aView = user.viewed.find((aView) => {
-        index = aView.videos.findIndex(
-          (video) => String(video.videoId) === String(id)
-        );
-        return index !== -1;
-      });
-    }
+    aView = user.viewed.find((aView) => {
+      index = aView.videos.findIndex(
+        (video) => String(video.videoId) === String(id)
+      );
+      return index !== -1;
+    });
 
-    if (!loggedIn || !aView) {
-      // did not watch it
-      setIsViewExist(false);
-    } else {
-      const { videoCode, player, time } = aView.videos[index];
-      setIframe(videoCode, player, time);
-      setLoading(false);
+    if (!!aView) {
+      const { time } = aView.videos[index];
+      setViewedTime(time);
     }
+    setViewedLoading(false);
   }, [loggedIn, id]);
 
   return (
@@ -151,27 +92,10 @@ const Watch = () => {
         <NotFound />
       ) : (
         <main className={styles.main}>
-          {loading ? (
+          {isLoading ? (
             <CircleLoading />
-          ) : player === process.env.REACT_APP_YOUTUBE_PLAYER ? (
-            <YouTube
-              id="player"
-              className={styles.videoFrame}
-              videoId={code}
-              opts={opts}
-              onReady={onYoutubeReady}
-              onPlay={onYoutubePlay}
-              onPause={onYoutubePause}
-              onEnd={onYoutubeEnd}
-            />
           ) : (
-            <iframe
-              id="player"
-              className={styles.videoFrame}
-              title="Lecture Video"
-              src={src}
-              allow={allow}
-            ></iframe>
+            getVideoPlayer(data.videoObj?.player)
           )}
         </main>
       )}

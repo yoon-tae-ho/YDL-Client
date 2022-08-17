@@ -91,6 +91,7 @@ const Preview = ({
   const [isContinueWatching, setIsContinueWatching] = useState(false);
   const [videoInfo, setVideoInfo] = useState({});
   const [progress, setProgress] = useState(0);
+  const [isProgressPossible, setIsProgressPossible] = useState(false);
 
   // fetch first video's embededCode and player when hovered
   const { data: firstVideo } = useQuery(
@@ -121,8 +122,11 @@ const Preview = ({
     const aView = user.viewed.find((aView) => aView.lectureId === id);
     if (aView) {
       const { time, duration } = aView.videos[0];
+      if (duration !== 0) {
+        setProgress((time / duration) * 100);
+        setIsProgressPossible(true);
+      }
       setVideoInfo(aView.videos[0]);
-      setProgress((time / duration) * 100);
       setIsContinueWatching(true);
     }
   };
@@ -205,14 +209,16 @@ const Preview = ({
                   }강`}</strong>
                   {` "${videoInfo.videoTitle}"`}
                 </span>
-                <div className={styles.progress_container}>
-                  <div className={styles.progress_hovered}>
-                    <ProgressBar progress={progress} />
+                {isProgressPossible && (
+                  <div className={styles.progress_container}>
+                    <div className={styles.progress_hovered}>
+                      <ProgressBar progress={progress} />
+                    </div>
+                    <span className={styles.progress_text}>{`총 ${Math.floor(
+                      videoInfo.duration / 60
+                    )}분 중 ${Math.floor(videoInfo.time / 60)}분`}</span>
                   </div>
-                  <span className={styles.progress_text}>{`총 ${Math.floor(
-                    videoInfo.duration / 60
-                  )}분 중 ${Math.floor(videoInfo.time / 60)}분`}</span>
-                </div>
+                )}
               </div>
             ) : (
               <ul className={styles.topicList}>

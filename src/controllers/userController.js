@@ -82,12 +82,13 @@ export const getVideoInfo = async (videoId) => {
       `${process.env.REACT_APP_API_URL}/user/viewed/${videoId}`
     );
 
-    let data;
-    if (response.status === 200) {
-      data = await response.json();
+    if (!response.ok) {
+      return { isError: true };
     }
 
-    return { status: response.status, data };
+    const videoObj = await response.json();
+
+    return { isError: false, videoObj };
   } catch (error) {
     console.log(error);
   }
