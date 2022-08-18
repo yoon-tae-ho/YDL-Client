@@ -76,24 +76,6 @@ export const cancelHate = (lectureId) => {
   });
 };
 
-export const getVideoInfo = async (videoId) => {
-  try {
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/user/viewed/${videoId}`
-    );
-
-    if (!response.ok) {
-      return { isError: true };
-    }
-
-    const videoObj = await response.json();
-
-    return { isError: false, videoObj };
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const putView = async (videoId, time, duration) => {
   try {
     const response = await fetch(

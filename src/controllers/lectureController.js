@@ -190,3 +190,39 @@ export const getTopicCategory = async () => {
     await fetch(`${process.env.REACT_APP_API_URL}/topics/category`)
   ).json();
 };
+
+export const getVideoInfo = async (videoId) => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/videos/${videoId}`
+    );
+
+    if (!response.ok) {
+      return { isError: true };
+    }
+
+    const videoObj = await response.json();
+
+    return { isError: false, videoObj };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getNextVideo = async (videoId) => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/videos/${videoId}/next`
+    );
+
+    if (!response.ok) {
+      return { isError: true };
+    }
+
+    const { isLast, nextId } = await response.json();
+
+    return { isError: false, isLast, nextId };
+  } catch (error) {
+    console.log(error);
+  }
+};

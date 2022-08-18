@@ -5,7 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import styles from "../css/Watch.module.css";
 import NotFound from "../components/NotFound";
 import UserContext from "../contexts/UserContext";
-import { getVideoInfo, putView } from "../controllers/userController";
+import { putView } from "../controllers/userController";
+import { getVideoInfo } from "../controllers/lectureController";
 import CircleLoading from "../components/CircleLoading";
 import YoutubePlayer from "../components/YoutubePlayer";
 import YalePlayer from "../components/YalePlayer";
@@ -19,6 +20,7 @@ const Watch = () => {
   const [viewedLoading, setViewedLoading] = useState(true);
   const [error, setError] = useState(false);
   const [viewedTime, setViewedTime] = useState(0);
+  const [viewedDuration, setViewedDuration] = useState(-1);
 
   const { isLoading: queryLoading, data } = useQuery(
     ["watching", id],
@@ -46,10 +48,13 @@ const Watch = () => {
 
   const getVideoPlayer = (player) => {
     const commonProps = {
+      videoId: id,
       wrapperClass: styles.videoFrame,
       loggedIn,
       INTERVAL_TIME,
       viewedTime,
+      viewedDuration,
+      belongIn: data.videoObj?.belongIn,
       putViewed,
     };
 
@@ -92,8 +97,9 @@ const Watch = () => {
     });
 
     if (!!aView) {
-      const { time } = aView.videos[index];
+      const { time, duration } = aView.videos[index];
       setViewedTime(time);
+      setViewedDuration(duration);
     }
     setViewedLoading(false);
   }, [loggedIn, id]);

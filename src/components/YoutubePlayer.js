@@ -1,15 +1,21 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import YouTube from "react-youtube";
+import { getNextVideo } from "../controllers/lectureController";
 
 const YoutubePlayer = ({
+  videoId,
   wrapperClass,
   loggedIn,
-  putViewed,
   INTERVAL_TIME,
+  viewedTime,
+  viewedDuration,
+  belongIn,
+  putViewed,
   embededCode,
-  time,
 }) => {
   const [intervalId, setIntervalId] = useState("");
+  const navigate = useNavigate();
 
   const onReady = (event) => {
     if (loggedIn) {
@@ -43,13 +49,18 @@ const YoutubePlayer = ({
     }
   };
 
-  const onEnd = (event) => {};
+  const onEnd = async (event) => {
+    const { isError, isLast, nextId } = await getNextVideo(videoId);
+    if (isError) navigate("/");
+    else if (isLast) navigate(`/browse/${belongIn}`);
+    else navigate(`/watch/${nextId}`);
+  };
 
   // clear interval
   useEffect(() => {
     return () => {
       if (intervalId) {
-        clearTimeout(intervalId);
+        clearInterval(intervalId);
         setIntervalId("");
       }
     };
@@ -65,7 +76,12 @@ const YoutubePlayer = ({
         height: "100%",
         playerVars: {
           // https://developers.google.com/youtube/player_parameters
-          start: time,
+          start:
+            viewedDuration === -1
+              ? 0
+              : viewedDuration === viewedTime
+              ? 0
+              : viewedTime,
           autoplay: 1,
           controls: 1,
           enablejsapi: 1,
