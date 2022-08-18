@@ -192,7 +192,7 @@ const Header = () => {
                 )}
                 {userHovered && (
                   <div className={styles.user_menu}>
-                    <ul className={styles.user_menu_list}>
+                    {/* <ul className={styles.user_menu_list}>
                       <li className={styles.user_menu_item}>
                         <Link
                           className={styles.user_menu_link}
@@ -205,7 +205,7 @@ const Header = () => {
                           <span>계정</span>
                         </Link>
                       </li>
-                    </ul>
+                    </ul> */}
                     <ul className={styles.user_menu_list}>
                       <li className={styles.user_menu_item}>
                         <Link
