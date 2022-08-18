@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import UserContext from "../../contexts/UserContext";
 import { cancelLike, checkArray, like } from "../../controllers/userController";
 import styles from "../../css/Button.module.css";
+import { useAnalyticsEventTracker } from "../../hooks";
 
 const LikeButton = ({ lectureId }) => {
   const {
@@ -13,6 +14,9 @@ const LikeButton = ({ lectureId }) => {
   const [active, setActive] = useState(false);
   const [isHated, setIsHated] = useState(false);
   const navigate = useNavigate();
+
+  // Google Analytics
+  const gaEventTracker = useAnalyticsEventTracker("Lecture");
 
   const onClick = (event) => {
     event.preventDefault();
@@ -41,7 +45,13 @@ const LikeButton = ({ lectureId }) => {
             ),
       }));
     }
+    const prevActive = active;
     setActive((current) => !current);
+
+    gaEventTracker(
+      "Like",
+      `${lectureId}-${prevActive ? "Deactivate" : "Activate"}`
+    );
   };
 
   useEffect(() => {

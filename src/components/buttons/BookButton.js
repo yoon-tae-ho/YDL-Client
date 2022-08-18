@@ -3,6 +3,7 @@ import styles from "../../css/Button.module.css";
 import UserContext from "../../contexts/UserContext";
 import { book, cancelBook, checkArray } from "../../controllers/userController";
 import { useNavigate } from "react-router-dom";
+import { useAnalyticsEventTracker } from "../../hooks";
 
 const BookButton = ({ lectureId }) => {
   const {
@@ -12,6 +13,9 @@ const BookButton = ({ lectureId }) => {
   } = useContext(UserContext);
   const [active, setActive] = useState(false);
   const navigate = useNavigate();
+
+  // Google Analytics
+  const gaEventTracker = useAnalyticsEventTracker("Lecture");
 
   const onClick = (event) => {
     event.preventDefault();
@@ -35,7 +39,13 @@ const BookButton = ({ lectureId }) => {
         booked: [lectureId, ...current.booked],
       }));
     }
+    const prevActive = active;
     setActive((current) => !current);
+
+    gaEventTracker(
+      "Book",
+      `${lectureId}-${prevActive ? "Deactivate" : "Activate"}`
+    );
   };
 
   useEffect(() => {

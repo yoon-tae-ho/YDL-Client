@@ -10,6 +10,7 @@ import { getVideoInfo } from "../controllers/lectureController";
 import CircleLoading from "../components/CircleLoading";
 import YoutubePlayer from "../components/YoutubePlayer";
 import YalePlayer from "../components/YalePlayer";
+import { useAnalyticsEventTracker } from "../hooks";
 
 const INTERVAL_TIME = 5000; // 몇 초에 한 번씩 putViewed를 호출하는지.
 
@@ -21,6 +22,9 @@ const Watch = () => {
   const [error, setError] = useState(false);
   const [viewedTime, setViewedTime] = useState(0);
   const [viewedDuration, setViewedDuration] = useState(-1);
+
+  // Google Analytics
+  const gaEventTracker = useAnalyticsEventTracker("Lecture");
 
   const { isLoading: queryLoading, data } = useQuery(
     ["watching", id],
@@ -103,6 +107,14 @@ const Watch = () => {
     }
     setViewedLoading(false);
   }, [loggedIn, id]);
+
+  useEffect(() => {
+    if (!!data && !data.isError)
+      gaEventTracker(
+        "Watch",
+        `${data.videoObj?.belongIn}-${data.videoObj?.videoIndex}`
+      );
+  }, [id, data]);
 
   return (
     <>

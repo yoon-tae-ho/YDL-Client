@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import UserContext from "../../contexts/UserContext";
 import { cancelHate, checkArray, hate } from "../../controllers/userController";
 import styles from "../../css/Button.module.css";
+import { useAnalyticsEventTracker } from "../../hooks";
 
 const HateButton = ({ lectureId }) => {
   const {
@@ -13,6 +14,9 @@ const HateButton = ({ lectureId }) => {
   const [active, setActive] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const navigate = useNavigate();
+
+  // Google Analytics
+  const gaEventTracker = useAnalyticsEventTracker("Lecture");
 
   const onClick = (event) => {
     event.preventDefault();
@@ -41,7 +45,13 @@ const HateButton = ({ lectureId }) => {
             ),
       }));
     }
+    const prevActive = active;
     setActive((current) => !current);
+
+    gaEventTracker(
+      "Hate",
+      `${lectureId}-${prevActive ? "Deactivate" : "Activate"}`
+    );
   };
 
   useEffect(() => {

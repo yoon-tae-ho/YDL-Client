@@ -10,7 +10,7 @@ import {
   searchLectures,
 } from "../controllers/lectureController";
 import styles from "../css/Search.module.css";
-import { useIntersectionObserver } from "../hooks";
+import { useAnalyticsEventTracker, useIntersectionObserver } from "../hooks";
 import Footer from "../components/Footer";
 import CircleLoading from "../components/CircleLoading";
 
@@ -21,6 +21,9 @@ const Search = () => {
   const [lectures, setLectures] = useState([]);
   const [error, setError] = useState(null);
   const [target, setTarget] = useState(null);
+
+  // Google Analytics
+  const gaEventTracker = useAnalyticsEventTracker("Search");
 
   const { fetchNextPage, hasNextPage, data } = useInfiniteQuery(
     ["lectures", "search", text],
@@ -53,6 +56,7 @@ const Search = () => {
 
   // search param이 바뀌어도 search page에서 벗어나지 않기 때문에
   // state들이 초기화되지 않음. 따라서 state initialize가 필요함.
+  // GA
   useEffect(() => {
     const keyword = searchParams.get("q");
 
@@ -63,6 +67,8 @@ const Search = () => {
 
     setIsSearching(true);
     setText(keyword);
+
+    gaEventTracker(keyword, "");
   }, [searchParams]);
 
   // lectures에 data를 채워넣음.

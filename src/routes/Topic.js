@@ -12,7 +12,7 @@ import {
   divideLectures,
 } from "../controllers/lectureController";
 import styles from "../css/Topic.module.css";
-import { useIntersectionObserver } from "../hooks";
+import { useAnalyticsEventTracker, useIntersectionObserver } from "../hooks";
 
 const allowedNonRegex = [
   process.env.REACT_APP_CONTINUE_WATCHING,
@@ -28,6 +28,9 @@ const Topic = () => {
   const [topicName, setTopicName] = useState("");
   const [error, setError] = useState(null);
   const [target, setTarget] = useState(null);
+
+  // Google Analytics
+  const gaEventTracker = useAnalyticsEventTracker("Topic");
 
   const { fetchNextPage, hasNextPage, data } = useInfiniteQuery(
     ["lectures", "topic", id, loggedIn],
@@ -69,6 +72,7 @@ const Topic = () => {
   });
 
   // lectures와 topicName에 data를 채워넣음.
+  // GA
   useEffect(() => {
     if (!data) return;
 
@@ -77,6 +81,10 @@ const Topic = () => {
       // first page
       if (i === 0) {
         setTopicName(page.result?.name);
+        gaEventTracker(
+          allowedNonRegex.includes(id) ? id : page.result?.name,
+          id
+        );
       }
       if (!!page.result?.lectures)
         newLectures = [...newLectures, ...page.result.lectures];

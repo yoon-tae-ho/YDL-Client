@@ -8,10 +8,14 @@ import Github from "../images/github_logo.svg";
 import UserContext from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+import { useAnalyticsEventTracker } from "../hooks";
 
 const Login = () => {
   const { loggedIn } = useContext(UserContext);
   const navigate = useNavigate();
+
+  // Google Analytics
+  const gaEventTracker = useAnalyticsEventTracker("Login");
 
   useEffect(() => {
     if (loggedIn) {
@@ -27,6 +31,7 @@ const Login = () => {
             <a
               href={`${process.env.REACT_APP_API_URL}/user/social/google/start`}
               className={styles.social_link}
+              onClick={() => gaEventTracker("Google", "")}
             >
               <div className={styles.social_left}>
                 <img
@@ -45,6 +50,7 @@ const Login = () => {
             <a
               href={`${process.env.REACT_APP_API_URL}/user/social/kakao/start`}
               className={styles.social_link}
+              onClick={() => gaEventTracker("Kakao", "")}
             >
               <div className={styles.social_left}>
                 <img
@@ -63,6 +69,7 @@ const Login = () => {
             <a
               href={`${process.env.REACT_APP_API_URL}/user/social/naver/start`}
               className={styles.social_link}
+              onClick={() => gaEventTracker("Naver", "")}
             >
               <div className={styles.social_left}>
                 <div className={styles.naver_logo_background}></div>
@@ -82,6 +89,7 @@ const Login = () => {
             <a
               href={`${process.env.REACT_APP_API_URL}/user/social/github/start`}
               className={styles.social_link}
+              onClick={() => gaEventTracker("Github", "")}
             >
               <div className={styles.social_left}>
                 <img

@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import ReactGA from "react-ga";
 
 export const useIntersectionObserver = async ({
   root,
@@ -35,4 +36,11 @@ export const useIntersectionObserver = async ({
       observer.unobserve(target);
     };
   }, [root, target, onIntersect, threshold, rootMargin]);
+};
+
+export const useAnalyticsEventTracker = (category = "Default Category") => {
+  const eventTracker = (action = "Default Action", label = "Default Label") => {
+    ReactGA.event({ category, action, label });
+  };
+  return eventTracker;
 };

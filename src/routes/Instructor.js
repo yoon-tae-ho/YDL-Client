@@ -11,7 +11,7 @@ import {
   divideLectures,
 } from "../controllers/lectureController";
 import styles from "../css/Instructor.module.css";
-import { useIntersectionObserver } from "../hooks";
+import { useAnalyticsEventTracker, useIntersectionObserver } from "../hooks";
 
 const Topic = () => {
   const { id } = useParams();
@@ -19,6 +19,9 @@ const Topic = () => {
   const [instructorName, setInstructorName] = useState("");
   const [error, setError] = useState(null);
   const [target, setTarget] = useState(null);
+
+  // Google Analytics
+  const gaEventTracker = useAnalyticsEventTracker("Instructor");
 
   const { fetchNextPage, hasNextPage, data } = useInfiniteQuery(
     ["lectures", "instructor", id],
@@ -37,6 +40,7 @@ const Topic = () => {
   );
 
   // lectures와 instructorName에 data를 채워넣음.
+  // GA
   useEffect(() => {
     if (!data) return;
 
@@ -45,6 +49,7 @@ const Topic = () => {
       // first page
       if (i === 0) {
         setInstructorName(page.result?.name);
+        gaEventTracker(page.result?.name, id);
       }
       if (!!page.result?.lectures)
         newLectures = [...newLectures, ...page.result.lectures];

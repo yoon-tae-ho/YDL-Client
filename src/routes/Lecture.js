@@ -12,6 +12,7 @@ import MoreButton from "../components/buttons/MoreButton";
 import VideoSelector from "../components/VideoSelector";
 import CircleLoading from "../components/CircleLoading";
 import { getLectureDetail } from "../controllers/lectureController";
+import { useAnalyticsEventTracker } from "../hooks";
 
 const getTags = (type, tags, limit = tags.length) => {
   let result = [];
@@ -55,6 +56,9 @@ const Lecture = () => {
   const [expanded, setExpanded] = useState(false);
   const [clamped, setClamped] = useState(true);
 
+  // Google Analytics
+  const gaEventTracker = useAnalyticsEventTracker("Lecture");
+
   const { data } = useQuery(["lectureDetail", id], () => getLectureDetail(id), {
     onSuccess: (data) => {
       if (data.isError) processError();
@@ -75,8 +79,12 @@ const Lecture = () => {
   }, [id]);
 
   // lecture에 data를 채워넣음.
+  //  GA
   useEffect(() => {
-    if (!!data && !data.isError) setLecture(data.lecture);
+    if (!!data && !data.isError) {
+      setLecture(data.lecture);
+      gaEventTracker("Detail", `${id}-${data.lecture?.title}`);
+    }
   }, [data]);
 
   const onDivideBtnClick = () => setExpanded((current) => !current);
