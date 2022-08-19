@@ -1,3 +1,5 @@
+import * as Sentry from "@sentry/react";
+
 export const divideLectures = (lectures) => {
   if (!lectures || lectures.length === 0) {
     return [];
@@ -41,6 +43,7 @@ export const getFirstVideo = async (lectureId) => {
     return await response.json();
   } catch (error) {
     console.log(error);
+    Sentry.captureException(`Catched Error : ${error}`);
   }
 };
 
@@ -67,6 +70,7 @@ export const getLecturesOfTopic = async (topicId, pageParam) => {
     };
   } catch (error) {
     console.log(error);
+    Sentry.captureException(`Catched Error : ${error}`);
   }
 };
 
@@ -95,6 +99,7 @@ export const getLecturesOfInstructor = async (instructorId, pageParam) => {
     };
   } catch (error) {
     console.log(error);
+    Sentry.captureException(`Catched Error : ${error}`);
   }
 };
 
@@ -121,6 +126,7 @@ export const searchLectures = async (keyword, excepts, pageParam) => {
     };
   } catch (error) {
     console.log(error);
+    Sentry.captureException(`Catched Error : ${error}`);
   }
 };
 
@@ -182,6 +188,7 @@ export const browseLectures = async (pageParam, maxIndex, isContainedArr) => {
     };
   } catch (error) {
     console.log(error);
+    Sentry.captureException(`Catched Error : ${error}`);
   }
 };
 
@@ -206,6 +213,7 @@ export const getVideoInfo = async (videoId) => {
     return { isError: false, videoObj };
   } catch (error) {
     console.log(error);
+    Sentry.captureException(`Catched Error : ${error}`);
   }
 };
 
@@ -224,5 +232,6 @@ export const getNextVideo = async (videoId) => {
     return { isError: false, isLast, nextId };
   } catch (error) {
     console.log(error);
+    Sentry.captureException(`Catched Error : ${error}`);
   }
 };

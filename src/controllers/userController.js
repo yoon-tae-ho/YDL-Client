@@ -1,3 +1,5 @@
+import * as Sentry from "@sentry/react";
+
 export const checkArray = (array, targetId) => {
   if (!array) {
     return;
@@ -24,6 +26,7 @@ export const checkUser = async () => {
     ).json();
   } catch (error) {
     console.log(error);
+    Sentry.captureException(`Catched Error : ${error}`);
   }
 };
 
@@ -100,5 +103,6 @@ export const putView = async (videoId, time, duration) => {
     return { status: response.status, newViewed };
   } catch (error) {
     console.log(error);
+    Sentry.captureException(`Catched Error : ${error}`);
   }
 };
